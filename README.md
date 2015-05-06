@@ -1,2 +1,4 @@
-# ScrollView
-Scroll wrapper with additional features 
+ScrollView
+===========
+
+Scroll wrapper with additional features

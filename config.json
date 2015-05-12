@@ -1,0 +1,21 @@
+{
+	"folderCompiled": "release",
+	"folderCompiled_": "Folder path where to store compiled source",
+	"folderSource": "source",
+	"folderSource_": "Folder path where source files is stored",
+	"name": "scrollviewjs",
+	"name_": "Name of library and main file",
+	"sourceFiles": [
+		"source/module-head",
+		"source/global.js",
+		"source/polyfill_date.js",
+		"source/polyfill_perfomance.js",
+		"source/polyfill_animation.js",
+		"source/pointerwrapper.js",
+		"source/scrollbar.js",
+		"source/scrollview.js",
+		"source/x-scrollview.js",
+		"source/module-foot"
+	],
+	"sourceFiles_": "Ordered list of source files"
+}

@@ -1,0 +1,57 @@
+{
+	"author": "Yuriy Luchaninov <y.luchaninov@mobidev.biz> (http://mobidev.biz/)",
+	"bugs": {
+		"url": "https://github.com/Rapid-Application-Development-JS/ScrollView/issues"
+	},
+	"contributors": [
+		"Anton Trofimenko <a.trofimenko@mobidev.biz>",
+		"Yuriy Luchaninov <y.luchaninov@mobidev.biz>"
+	],
+	"dependencies": {
+		"devicejs": "~0.*"
+	},
+	"description": "Scroll wrapper with additional features.",
+	"devDependencies": {
+		"grunt": "^0.4.*",
+		"grunt-contrib-clean": "^0.6.*",
+		"grunt-contrib-concat": "^0.5.1",
+		"grunt-contrib-copy": "^0.8.*",
+		"grunt-contrib-uglify": "^0.9.*",
+		"grunt-stripcomments": "^0.3.*",
+		"gulp": "^3.*",
+		"gulp-concat": "^2.5.2",
+		"gulp-rename": "^1.2.*",
+		"gulp-sourcemaps": "^1.5.*",
+		"gulp-uglify": "^1.2.0",
+		"uglifyjs": "^2.*"
+	},
+	"directories": {
+		"docs": "docs",
+		"example": "example"
+	},
+	"homepage": "https://github.com/Rapid-Application-Development-JS/ScrollView#readme",
+	"keywords": [
+		"scroll",
+		"scroll_view",
+		"scroll-view"
+	],
+	"license": "MIT",
+	"main": [
+		"/release/scrollviewjs.min.js",
+		"/release/scrollviewjs.map"
+	],
+	"name": "scrollviewjs",
+	"private": false,
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Rapid-Application-Development-JS/ScrollView.git"
+	},
+	"scripts": {
+		"build": "uglifyjs '/source/scrollview.js' --compress --mangle --screw-ie8 --comments --lint --source-map '/source/scrollview.map' --output '/release/scrollview.min.js'"
+	},
+	"version": "0.0.1",
+	"directories": {
+		"doc": "docs",
+		"example": "example"
+	}
+}

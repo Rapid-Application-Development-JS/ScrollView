@@ -1,4 +1,12 @@
 ScrollView
 ===========
 
-Scroll wrapper with additional features
+Scroll wrapper with additional features.
+
+## Advantages:
+
+*
+
+## Drawbacks:
+
+* 

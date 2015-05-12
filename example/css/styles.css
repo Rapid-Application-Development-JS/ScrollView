@@ -1,0 +1,133 @@
+@import url('font.css');
+@import url('zodiac.css');
+
+body {
+	font-family: source-sans-pro, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* ScrollViewJS */
+
+.scroll-horizontal, .scroll-vertical {
+	background-color: #85A39C;
+}
+
+#container-vertical, #container-horizontal {
+	margin: 20px;
+}
+
+.scroll-horizontal, .scroll-vertical {
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	-ms-border-radius: 6px;
+	-o-border-radius: 6px;
+	border-radius: 6px;
+	border: 1px solid #333434;
+	-webkit-box-shadow: inset 0 1px rgba(0, 0, 0, .05);
+	-moz-box-shadow: inset 0 1px rgba(0, 0, 0, .05);
+	-ms-box-shadow: inset 0 1px rgba(0, 0, 0, .05);
+	-o-box-shadow: inset 0 1px rgba(0, 0, 0, .05);
+	box-shadow: inset 0 1px rgba(0, 0, 0, .05);
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 192px;
+}
+
+.scroll-vertical, .scroll-horizontal, .scroll-content {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.scroll-vertical .scroll-content {
+	padding: 20px;
+}
+
+.scroll-horizontal .scroll-content {
+	padding: 20px;
+	min-width: 120%;
+}
+
+/* ScrollBar */
+
+.scrollbar-vertical, .scrollbar-horizontal {
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	border: 1px solid #999;
+	background-color: #bcbfbf;
+}
+
+.scrollbar-vertical {
+	right: 0;
+	top: 0;
+	width: 10px;
+	min-height: 16px !important;
+}
+
+.scrollbar-horizontal {
+	left: 0;
+	top: 0;
+	height: 10px;
+	min-width: 16px !important;
+}
+
+/* example td */
+
+.zodiac {
+	color: white;
+	border-spacing: 8px;
+	border-collapse: separate;
+}
+
+.zodiac .symbol {
+	min-height: 64px;
+	min-width: 64px;
+	height: 64px;
+	width: 64px;
+}
+
+.zodiac td {
+	font-size: 16px;
+}
+
+#container-horizontal .zodiac td {
+	text-align: center;
+}
+
+#container-vertical .zodiac td {
+	text-align: right;
+}
+
+.zodiac td, .zodiac th {
+	vertical-align: middle;
+}
+
+#container-horizontal .zodiac td {
+	margin-right: 16px;
+}
+
+.main-container {
+	color: white;
+	height: 100%;
+	-webkit-overflow-scrolling: touch;
+	overflow-scrolling: touch;
+	overflow-x: hidden;
+	overflow-y: auto;
+	position: relative;
+	width: 100%;
+}
+

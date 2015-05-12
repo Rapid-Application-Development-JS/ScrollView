@@ -1,0 +1,53 @@
+.Aries, .Taurus, .Gemini, .Cancer, .Leo, .Virgo, .Libra, .Scorpio, .Sagittarius, .Capricorn, .Aquarius, .Pisces {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+.Aries {
+	background-image: url("../img/aries.png");
+}
+
+.Taurus {
+	background-image: url("../img/taurus.png");
+}
+
+.Gemini {
+	background-image: url("../img/gemini.png");
+}
+
+.Cancer {
+	background-image: url("../img/cancer.png");
+}
+
+.Leo {
+	background-image: url("../img/leo.png");
+}
+
+.Virgo {
+	background-image: url("../img/virgo.png");
+}
+
+.Libra {
+	background-image: url("../img/libra.png");
+}
+
+.Scorpio {
+	background-image: url("../img/scorpion.png");
+}
+
+.Sagittarius {
+	background-image: url("../img/sagittarius.png");
+}
+
+.Capricorn {
+	background-image: url("../img/capricorn.png");
+}
+
+.Aquarius {
+	background-image: url("../img/aquarius.png");
+}
+
+.Pisces {
+	background-image: url("../img/pisces.png");
+}

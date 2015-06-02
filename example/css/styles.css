@@ -31,10 +31,21 @@ code {
 }
 
 pre, code {
+	font-size: 14px;
 	margin: 1px;
 }
 
 /* ScrollViewJS */
+
+.scroll-vertical:after {
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	bottom: 0;
+	right: 4px;
+	border-left: 1px solid #595b5b;
+}
 
 .scroll-horizontal, .scroll-vertical {
 	background-color: #85A39C;
@@ -86,7 +97,22 @@ pre, code {
 
 /* ScrollBar */
 
-.scrollbar-vertical, .scrollbar-horizontal {
+.scrollbar-vertical {
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	border: 1px solid #333434;
+	background-color: #595b5b;
+
+	z-index: 2;
+}
+
+.scrollbar-horizontal {
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
@@ -103,14 +129,14 @@ pre, code {
 	right: 0;
 	top: 0;
 	width: 10px;
-	min-height: 16px !important;
+	min-height: 32px !important;
 }
 
 .scrollbar-horizontal {
 	left: 0;
 	top: 0;
 	height: 10px;
-	min-width: 16px !important;
+	min-width: 32px !important;
 }
 
 /* example td */
@@ -173,9 +199,6 @@ pre, code {
 
 @media (min-width: 641px) {
 	/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
-	.sv-code {
-		display: block;
-	}
 }
 
 @media (min-width: 961px) {

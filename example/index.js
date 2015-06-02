@@ -1,15 +1,19 @@
 require.config({
-	"baseUrl": "",
-	"paths": {
-		"device": "vendors/device/device.min",
-		"webcomponents": "vendors/webcomponentsjs/webcomponents-lite.min",
-		"scrollviewjs": "vendors/scrollviewjs/scrollviewjs.min"
-	},
-	"shim": {
-		"scrollviewjs": {
-			"deps": ["device", "webcomponents"]
-		}
-	},
-	"waitSeconds": 0
+  "baseUrl": "",
+  "paths": {
+    "app": "app"
+    , "device": "vendors/device/device.min"
+    , "webcomponents": "vendors/webcomponentsjs/webcomponents-lite.min"
+    , "scrollviewjs": "../release/scrollviewjs"
+    , "x-scrollviewjs": "../release/x-scrollviewjs"
+  },
+  "shim": {
+    "app": {"deps": ["scrollviewjs"]}
+    , "scrollviewjs": {"deps": ["device", "webcomponents"]}
+    , "x-scrollviewjs": {"deps": ["scrollviewjs"]}
+  },
+  "waitSeconds": 0
 });
-require(["scrollviewjs"]);
+require(["app", "scrollviewjs", "x-scrollviewjs"], function (app, scrollviewjs) {
+  app.start({scrollview: scrollviewjs});
+});

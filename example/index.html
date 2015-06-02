@@ -5,9 +5,13 @@
 	<title>Example: ScrollViewJS</title>
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css">
+	<link rel="stylesheet" href="vendors/github-fork-ribbon-css/gh-fork-ribbon.css">
 	<link rel="stylesheet" href="vendors/topcoat/css/topcoat-mobile-dark.min.css">
+	<link rel="stylesheet" href="vendors/topcoat-grid/css/grid.min.css">
 	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="vendors/highlight/monokai_sublime.min.css">
+	<script src="vendors/highlight/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
 	<script src="vendors/requirejs/require.min.js" data-main="index.js"></script>
 </head>
 <body>
@@ -17,7 +21,6 @@
 		<a href="https://github.com/Rapid-Application-Development-JS/ScrollView" target="_blank">Fork us on GitHub</a>
 	</div>
 </div>
-
 <div class="main-container">
 	<div class="topcoat-navigation-bar">
 		<div class="topcoat-navigation-bar__item center full">
@@ -27,68 +30,51 @@
 	<div class="main main-blocks">
 		<div class="topcoat-grid">
 			<div class="topcoat-grid__row center">
-				<h3>Vertical scroll</h3>
-				<div class="topcoat-grid__column--1" id="container-vertical">
-					<div is="x-scrollviewjs" options="direction: vertical; bounds: true; scrollbar: scrollbar-vertical;" class="scroll-vertical">
+				<div class="topcoat-grid__column--auto">
+					<h3>Vertical scroll</h3>
+				</div>
+			</div>
+			<div class="topcoat-grid__row">
+				<div class="topcoat-grid__column--auto sv-code">
+<pre><code>function $initHighlight(block, cls) {
+  try {
+    if (cls.search(/\bno\-highlight\b/) != -1)
+      return process(block, true, 0x0F) +
+             ' class=""';
+  } catch (e) {
+    /* handle exception */
+  }
+  for (var i = 0 / 2; i < classes.length; i++) {
+    if (checkCondition(classes[i]) === undefined)
+      return /\d+[\s/]/g;
+  }
+}</code></pre>
+				</div>
+				<div class="topcoat-grid__column--auto" id="container-vertical">
+					<div is="x-scrollviewjs2" options="direction: vertical; bounds: true; scrollbar: scrollbar-vertical;" class="scroll-vertical">
 						<div class="scroll-content" id="scroll-vertical">
 							<table class="zodiac">
-								<tbody>
-								<tr><td class="symbol Aries">&nbsp;</td><td>Aries</td></tr>
-								<tr><td class="symbol Taurus">&nbsp;</td><td>Taurus</td></tr>
-								<tr><td class="symbol Gemini">&nbsp;</td><td>Gemini</td></tr>
-								<tr><td class="symbol Cancer">&nbsp;</td><td>Cancer</td></tr>
-								<tr><td class="symbol Leo">&nbsp;</td><td>Leo</td></tr>
-								<tr><td class="symbol Virgo">&nbsp;</td><td>Virgo</td></tr>
-								<tr><td class="symbol Libra">&nbsp;</td><td>Libra</td></tr>
-								<tr><td class="symbol Scorpio">&nbsp;</td><td>Scorpio</td></tr>
-								<tr><td class="symbol Sagittarius">&nbsp;</td><td>Sagittarius</td></tr>
-								<tr><td class="symbol Capricorn">&nbsp;</td><td>Capricorn</td></tr>
-								<tr><td class="symbol Aquarius">&nbsp;</td><td>Aquarius</td></tr>
-								<tr><td class="symbol Pisces">&nbsp;</td><td>Pisces</td></tr>
-								</tbody>
+								<tbody></tbody>
 							</table>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="topcoat-grid__row center">
-				<h3>Horizontal scroll</h3>
-				<div class="topcoat-grid__column--1"  id="container-horizontal">
+				<div class="topcoat-grid__column--auto">
+					<h3>Horizontal scroll</h3>
+				</div>
+			</div>
+			<div class="topcoat-grid__row">
+				<div class="topcoat-grid__column--auto sv-code">
+					CODE
+				</div>
+				<div class="topcoat-grid__column--auto" id="container-horizontal">
 					<div is="x-scrollviewjs" options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;"
-						 class="scroll-horizontal" id="scroll-horizontal">
-						<div class="scroll-content">
+						 class="scroll-horizontal">
+						<div class="scroll-content" id="scroll-horizontal">
 							<table>
-								<tbody class="zodiac">
-								<tr>
-									<td class="symbol Aries">&nbsp;</td>
-									<td class="symbol Taurus">&nbsp;</td>
-									<td class="symbol Gemini">&nbsp;</td>
-									<td class="symbol Cancer">&nbsp;</td>
-									<td class="symbol Leo">&nbsp;</td>
-									<td class="symbol Virgo">&nbsp;</td>
-									<td class="symbol Libra">&nbsp;</td>
-									<td class="symbol Scorpio">&nbsp;</td>
-									<td class="symbol Sagittarius">&nbsp;</td>
-									<td class="symbol Capricorn">&nbsp;</td>
-									<td class="symbol Aquarius">&nbsp;</td>
-									<td class="symbol Pisces">&nbsp;</td>
-								</tr>
-								<tr>
-									<td>Aries</td>
-									<td>Taurus</td>
-									<td>Gemini</td>
-									<td>Cancer</td>
-									<td>Leo</td>
-									<td>Virgo</td>
-									<td>Libra</td>
-									<td>Scorpio</td>
-									<td>Sagittarius</td>
-									<td>Capricorn</td>
-									<td>Aquarius</td>
-									<td>Pisces</td>
-								</tr>
-								</tbody>
+								<tbody class="zodiac"></tbody>
 							</table>
 						</div>
 					</div>
@@ -97,6 +83,5 @@
 		</div>
 	</div>
 </div>
-
 </body>
 </html>

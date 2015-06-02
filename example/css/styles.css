@@ -4,6 +4,34 @@
 body {
 	font-family: source-sans-pro, sans-serif;
 	-webkit-font-smoothing: antialiased;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* <CODE> */
+
+code {
+	-webkit-user-select: text !important;
+	-moz-user-select: text !important;
+	-ms-user-select: text !important;
+	user-select: text !important;
+}
+
+::-moz-selection {
+	background: black;
+	color: yellow;
+}
+
+::selection {
+	background: black;
+	color: yellow;
+}
+
+pre, code {
+	margin: 1px;
 }
 
 /* ScrollViewJS */
@@ -13,7 +41,7 @@ body {
 }
 
 #container-vertical, #container-horizontal {
-	margin: 20px;
+	margin: 1px;
 }
 
 .scroll-horizontal, .scroll-vertical {
@@ -94,10 +122,10 @@ body {
 }
 
 .zodiac .symbol {
-	min-height: 64px;
-	min-width: 64px;
-	height: 64px;
-	width: 64px;
+	min-height: 100px;
+	min-width: 100px;
+	height: 100px;
+	width: 100px;
 }
 
 .zodiac td {
@@ -131,3 +159,42 @@ body {
 	width: 100%;
 }
 
+.sv-code {
+	display: none;
+}
+
+@media (min-width: 320px) {
+	/* smartphones, iPhone, portrait 480x320 phones */
+}
+
+@media (min-width: 481px) {
+	/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+}
+
+@media (min-width: 641px) {
+	/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+	.sv-code {
+		display: block;
+	}
+}
+
+@media (min-width: 961px) {
+	/* tablet, landscape iPad, lo-res laptops ands desktops */
+	.sv-code {
+		display: block;
+	}
+}
+
+@media (min-width: 1025px) {
+	/* big landscape tablets, laptops, and desktops */
+	.sv-code {
+		display: block;
+	}
+}
+
+@media (min-width: 1281px) {
+	/* hi-res laptops and desktops */
+	.sv-code {
+		display: block;
+	}
+}

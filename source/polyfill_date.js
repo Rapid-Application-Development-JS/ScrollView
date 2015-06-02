@@ -1,5 +1,5 @@
-(function (w) {
-  w.Date.now || (w.Date.now = function () {
+(function (_window) {
+  _window.Date.now || (_window.Date.now = function () {
     return +new Date;
   });
 })(window);

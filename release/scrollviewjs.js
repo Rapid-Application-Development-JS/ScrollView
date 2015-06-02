@@ -10,513 +10,465 @@
   }
 }(this, function () {
   'use strict';
-  /**
-   * Add vendor prefix
-   * @param {string} property
-   * @return {string}
-   */
-  function addVendorPrefix(property) {
-    var prefs = ["webkit", "moz", "ms", "o"], index, $div = document.createElement("div"),
-      result = property.toLowerCase(), arrayOfPrefixes = [];
 
-    function capitalise(string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
+/**
+ * Add vendor prefix
+ * @param {string} property
+ * @return {string}
+ */
+function addVendorPrefix(property) {
+  var prefs = ['webkit', 'moz', 'ms', 'o'], index, $div = document.createElement('div'),
+    result = property.toLowerCase(), arrayOfPrefixes = [];
 
-    for (index = 0; index < prefs.length; index += 1) {
-      arrayOfPrefixes.push(prefs[index] + capitalise(property));
-    }
-    for (index = 0; index < arrayOfPrefixes.length; index += 1) {
-      if ($div.style[arrayOfPrefixes[index]] !== undefined) {
-        result = "-" + prefs[index] + "-" + property;
-        break;
-      }
-    }
-    return result;
+  function capitalise(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  /**
-   * Parse value from string
-   * @param {string} value
-   * @return {*}
-   */
-  function parseValue(value) {
-    if (!value.length) {
-      return undefined;
-    }
-    value = value.trim();
-    if (value.toLowerCase() === "true") {
-      return true;
-    }
-    if (value.toLowerCase() === "false") {
-      return false;
-    }
-    if (value.toLowerCase() === "null") {
-      return null;
-    }
-    if (value.toLowerCase() === "undefined") {
-      return undefined;
-    }
-    if (isNaN(value)) {
-      return value;
-    }
-    if (value.indexOf(".") !== 1) {
-      return parseFloat(value);
-    }
-    return parseInt(value, 10);
+  for (index = 0; index < prefs.length; index += 1) {
+    arrayOfPrefixes.push(prefs[index] + capitalise(property));
   }
-
-  /**
-   * Parse string with options
-   * @param {string} string
-   * @return {Object}
-   */
-  function parseOptions(string) {
-    var result = {}, attrs, index, length, current, key;
-    if (!string || !string.length) {
-      return result;
+  for (index = 0; index < arrayOfPrefixes.length; index += 1) {
+    if ($div.style[arrayOfPrefixes[index]] !== undefined) {
+      result = '-' + prefs[index] + '-' + property;
+      break;
     }
-    attrs = string.split(";");
-    for (index = 0, length = attrs.length; index < length; index += 1) {
-      current = attrs[index].split(":");
-      key = current[0].trim();
-      if (key.length) {
-        result[key] = parseValue(current[1]);
-      }
-    }
-    return result;
   }
+  return result;
+}
+/**
+ * Extend first on object with second
+ * @param {Object} old
+ * @param {Object} newMixin
+ * @return {Object}
+ */
+function mix(old, newMixin) {
+  var attr;
+  for (attr in newMixin) {
+    if (newMixin.hasOwnProperty(attr)) {
+      old[attr] = newMixin[attr];
+    }
+  }
+  return old;
+}
 
+(function (_window) {
+  _window.Date.now || (_window.Date.now = function () {
+    return +new Date;
+  });
+})(window);
+
+(function (_window) {
+  _window.performance || (_window.performance = {});
+  _window.performance.now && (_window.performance.now = performance.webkitNow || performance.mozNow || performance.msNow ||
+    performance.oNow || function () {
+      return Date.now()
+    })
+})(window);
+
+(function (_window) {
+  var lastTime = 0;
+  var vendors = ['webkit', 'moz', 'ms', 'o'];
+  for (var x = 0; x < vendors.length && !_window.requestAnimationFrame; ++x) {
+    _window.requestAnimationFrame = _window[vendors[x] + 'RequestAnimationFrame'];
+    _window.cancelAnimationFrame = _window[vendors[x] + 'CancelAnimationFrame']
+      || _window[vendors[x] + 'CancelRequestAnimationFrame'];
+  }
+  _window.requestAnimationFrame || (_window.requestAnimationFrame = function (callback) {
+    var currTime = Date.now();
+    var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+    var id = _window.setTimeout(function () {
+        callback(currTime + timeToCall)
+      },
+      timeToCall);
+    lastTime = currTime + timeToCall;
+    return id
+  });
+  _window.cancelAnimationFrame || (_window.cancelAnimationFrame = function (id) {
+    clearTimeout(id);
+  });
+}(window));
+
+/**
+ * Provide point events for DOM elements
+ * @param {Element} element
+ * @param {Object} listener
+ * @param {Object=} context
+ * @constructor
+ */
+function PointerWrapper(element, listener, context) {
+  this._isDown = false;
+  this._chancelId = false;
+  this._tracks = {};
+  this._tmpEvent = {};
+  if (this.isTouched) {
+    this._trackEvents = this.TRACK_TOUCH_EVENTS;
+  } else {
+    this._trackEvents = this.TRACK_EVENTS;
+  }
+  this.attach(element);
+  this._listener = listener;
+  if (typeof listener === 'object') {
+    this.notify = function (event) {
+      this._listener.handleEvent(event);
+    };
+  } else if (typeof context === 'object') {
+    this.notify = function (event) {
+      this._listener.apply(context, [event]);
+    };
+  } else {
+    this.notify = function (event) {
+      this._listener(event);
+    };
+  }
+}
+PointerWrapper.prototype = {
+  TRACK_TOUCH_EVENTS: {
+    touchstart: 'touchstart',
+    touchmove: 'touchmove',
+    touchend: 'touchend',
+    touchleave: 'touchleave',
+    touchcancel: '.touchcancel'
+  },
+  TRACK_EVENTS: {
+    mousedown: 'mousedown',
+    mousemove: 'mousemove',
+    mouseup: 'mouseup',
+    mouseover: 'mouseover',
+    mouseout: 'mouseout'
+  },
+  FIRE_EVENTS: {
+    up: 'pointerup',
+    down: 'pointerdown',
+    move: 'pointermove',
+    over: 'pointerover',
+    chancel: 'pointercancel',
+    fling: 'fling',
+    longtap: 'longtap',
+    tap: 'tap'
+  },
   /**
-   * Extend first on object with second
-   * @param {Object} old
-   * @param {Object} newMixin
-   * @return {Object}
+   * @type {boolean}
    */
-  function mix(old, newMixin) {
-    var attr;
-    for (attr in newMixin) {
-      if (newMixin.hasOwnProperty(attr)) {
-        old[attr] = newMixin[attr];
+  isTouched: !window.device.desktop(),
+  /**
+   * @public
+   */
+  attach: function (element, catchFirstEvent) {
+    var old = this.detach(), attr;
+    this._catch = !!catchFirstEvent;
+    if (element) {
+      this._el = element;
+      for (attr in this._trackEvents) {
+        if (this._trackEvents.hasOwnProperty(attr)) {
+          this._el.addEventListener(this._trackEvents[attr], this, false);
+        }
       }
     }
     return old;
-  }
-
-  (function (w) {
-    w.Date.now || (w.Date.now = function () {
-      return +new Date;
-    });
-  })(window);
-  (function (w) {
-    w.performance || (w.performance = {});
-    w.performance.now && (w.performance.now = performance.webkitNow || performance.mozNow || performance.msNow ||
-      performance.oNow || function () {
-        return Date.now()
-      })
-  })(window);
-  (function (w) {
-    var lastTime = 0;
-    var vendors = ["webkit", "moz", "ms", "o"];
-    for (var x = 0; x < vendors.length && !w.requestAnimationFrame; ++x) {
-      w.requestAnimationFrame = w[vendors[x] + "RequestAnimationFrame"];
-      w.cancelAnimationFrame = w[vendors[x] + "CancelAnimationFrame"]
-        || w[vendors[x] + "CancelRequestAnimationFrame"];
-    }
-    w.requestAnimationFrame || (w.requestAnimationFrame = function (callback) {
-      var currTime = Date.now();
-      var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-      var id = w.setTimeout(function () {
-          callback(currTime + timeToCall)
-        },
-        timeToCall);
-      lastTime = currTime + timeToCall;
-      return id
-    });
-    w.cancelAnimationFrame || (w.cancelAnimationFrame = function (id) {
-      clearTimeout(id);
-    });
-  }(window));
+  },
   /**
-   * Provide point events for DOM elements
-   * @param {Element} element
-   * @param {Object} listener
-   * @param {Object=} context
-   * @constructor
+   * @public
    */
-  function PointerWrapper(element, listener, context) {
-    this._isDown = false;
-    this._chancelId = false;
-    this._tracks = {};
-    this._tmpEvent = {};
-    if (this.isTouched) {
-      this._trackEvents = this.TRACK_TOUCH_EVENTS;
-    } else {
-      this._trackEvents = this.TRACK_EVENTS;
+  detach: function () {
+    var old = this._el, attr;
+    if (old) {
+      for (attr in this._trackEvents) {
+        if (this._trackEvents.hasOwnProperty(attr)) {
+          this._el.removeEventListener(this._trackEvents[attr], this);
+        }
+      }
     }
-    this.attach(element);
-    this._listener = listener;
-    if (typeof listener === "object") {
-      this.notify = function (event) {
-        this._listener.handleEvent(event);
-      };
-    } else if (typeof context === "object") {
-      this.notify = function (event) {
-        this._listener.apply(context, [event]);
-      };
-    } else {
-      this.notify = function (event) {
-        this._listener(event);
-      };
+    this._el = null;
+  },
+  /**
+   * @public
+   */
+  destroy: function () {
+    this.detach();
+    this._listener = null;
+    this._tmpEvent = null;
+  },
+  /**
+   * @public
+   */
+  handleEvent: function (event) {
+    if (this._chancelId !== null) {
+      clearTimeout(this._chancelId);
     }
-  }
-
-  PointerWrapper.prototype = {
-    TRACK_TOUCH_EVENTS: {
-      touchstart: "touchstart",
-      touchmove: "touchmove",
-      touchend: "touchend",
-      touchleave: "touchleave",
-      touchcancel: ".touchcancel"
-    },
-    TRACK_EVENTS: {
-      mousedown: "mousedown",
-      mousemove: "mousemove",
-      mouseup: "mouseup",
-      mouseover: "mouseover",
-      mouseout: "mouseout"
-    },
-    FIRE_EVENTS: {
-      up: "pointerup",
-      down: "pointerdown",
-      move: "pointermove",
-      over: "pointerover",
-      chancel: "pointercancel",
-      fling: "fling",
-      longtap: "longtap",
-      tap: "tap"
-    },
-    /**
-     * @type {boolean}
-     */
-    isTouched: !window.device.desktop(),
-    /**
-     * @public
-     */
-    attach: function (element, catchFirstEvent) {
-      var old = this.detach(), attr;
-      this._catch = !!catchFirstEvent;
-      if (element) {
-        this._el = element;
-        for (attr in this._trackEvents) {
-          if (this._trackEvents.hasOwnProperty(attr)) {
-            this._el.addEventListener(this._trackEvents[attr], this, false);
-          }
-        }
-      }
-      return old;
-    },
-    /**
-     * @public
-     */
-    detach: function () {
-      var old = this._el, attr;
-      if (old) {
-        for (attr in this._trackEvents) {
-          if (this._trackEvents.hasOwnProperty(attr)) {
-            this._el.removeEventListener(this._trackEvents[attr], this);
-          }
-        }
-      }
-      this._el = null;
-    },
-    /**
-     * @public
-     */
-    destroy: function () {
-      this.detach();
-      this._listener = null;
-      this._tmpEvent = null;
-    },
-    /**
-     * @public
-     */
-    handleEvent: function (event) {
-      if (this._chancelId !== null) {
-        clearTimeout(this._chancelId);
-      }
-      if (this._catch) {
-        switch (event.type) {
-          case this.TRACK_TOUCH_EVENTS.touchstart:
-          case this.TRACK_EVENTS.mousedown:
-            break;
-          default:
-            this._isDown = true;
-            this._chancelId = false;
-            this._pointerDown(event);
-            break;
-        }
-        this._catch = false;
-      }
+    if (this._catch) {
       switch (event.type) {
-        case this.TRACK_TOUCH_EVENTS.touchmove:
-        case this.TRACK_EVENTS.mousemove:
-          if (this._isDown) {
-            this._fireEvent(this.FIRE_EVENTS.move, event);
-          }
-          break;
         case this.TRACK_TOUCH_EVENTS.touchstart:
         case this.TRACK_EVENTS.mousedown:
+          break;
+        default:
           this._isDown = true;
           this._chancelId = false;
-          this._fireEvent(this.FIRE_EVENTS.down, event);
-          break;
-        case this.TRACK_TOUCH_EVENTS.touchend:
-        case this.TRACK_TOUCH_EVENTS.touchleave:
-        case this.TRACK_TOUCH_EVENTS.touchcancel:
-        case this.TRACK_EVENTS.mouseup:
-          if (this._isDown) {
-            this._isDown = false;
-            this._fireEvent(this.FIRE_EVENTS.up, event);
-          }
-          break;
-        case this.TRACK_EVENTS.mouseover:
-          if (this._isDown) {
-            this._fireEvent(this.FIRE_EVENTS.over, event);
-          }
-          break;
-        case this.TRACK_EVENTS.mouseout:
-          var pointerTracker = this;
-          if (this._isDown) {
-            this._chancelId = setTimeout(function () {
-              pointerTracker._isDown = false;
-              pointerTracker._fireEvent(pointerTracker.FIRE_EVENTS.chancel, event);
-              pointerTracker._chancelId = null;
-            }, 10);
-          }
+          this._pointerDown(event);
           break;
       }
-    },
-    /**
-     * @private
-     */
-    _pointerDown: function (event) {
-      this._tracks = {
-        start: {
-          clientX: event.clientX,
-          clientY: event.clientY,
-          timeStamp: event.timeStamp
-        },
-        pre: {
-          clientX: event.clientX,
-          clientY: event.clientY,
-          timeStamp: event.timeStamp
-        },
-        last: {
-          clientX: event.clientX,
-          clientY: event.clientY,
-          timeStamp: event.timeStamp
-        },
-        end: {
-          clientX: event.clientX,
-          clientY: event.clientY,
-          timeStamp: event.timeStamp
-        }
-      };
-    },
-    /**
-     * @private
-     */
-    _pointerMove: function (event) {
-      if (event.timeStamp - this._tracks.last.timeStamp > 10) {
-        this._tracks.pre.clientX = this._tracks.last.clientX;
-        this._tracks.pre.clientY = this._tracks.last.clientY;
-        this._tracks.pre.timeStamp = this._tracks.last.timeStamp;
-        this._tracks.last.clientX = event.clientX;
-        this._tracks.last.clientY = event.clientY;
-        this._tracks.last.timeStamp = event.timeStamp;
-      }
-    },
-    /**
-     *
-     * @param {Event} event
-     * @private
-     */
-    _pointerUp: function (event) {
-      var isMoved, isFling, pointer = this._tracks;
-      this._tracks.end.clientX = event.clientX;
-      this._tracks.end.clientY = event.clientY;
-      this._tracks.end.timeStamp = event.timeStamp;
-      function distance(x1, x2, y1, y2) {
-        return Math.pow(((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)), 0.5);
-      }
-
-      isMoved = Math.abs(
-          distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > 10;
-      isFling = Math.abs(
-          distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0;
-      if (isFling) {
-        this._tmpEvent.type = this.FIRE_EVENTS.fling;
-        this._tmpEvent.start = pointer.start;
-        this._tmpEvent.end = pointer.end;
-        this._tmpEvent.speedX =
-          (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp);
-        this._tmpEvent.speedY =
-          (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp);
-        this.notify(this._tmpEvent);
-      } else if (!isMoved) {
-        if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
-          this._tmpEvent.type = this.FIRE_EVENTS.longtap;
-          this.notify(this._tmpEvent);
-        } else {
-          this._tmpEvent.type = this.FIRE_EVENTS.tap;
-          this.notify(this._tmpEvent);
-        }
-      }
-      this._tracks = null;
-    },
-    /**
-     * @private
-     */
-    _fireEvent: function (type, event) {
-      var touchEvent = event, i, l;
-      // Get coordinates
-      if (this.isTouched) {
-        if (event.type === this.TRACK_TOUCH_EVENTS.touchstart) {
-          if (event.touches.length > 1) {
-            return;
-          }
-          touchEvent = event.touches[0];
-          this.touchID = event.touches[0].identifier;
-        } else {
-          if (!this.touchID) {
-            this.touchID = event.changedTouches[0].identifier;
-          }
-          for (i = 0, l = event.changedTouches.length; i < l; i += 1) {
-            touchEvent = event.changedTouches[i];
-            if (touchEvent.identifier === this.touchID) {
-              break;
-            }
-          }
-          if (touchEvent.identifier !== this.touchID) {
-            return;
-          }
-        }
-      } else {
-        this.touchID = 1; // Mouse
-      }
-      // Custom event
-      this._tmpEvent.type = type;
-      this._tmpEvent.start = null;
-      this._tmpEvent.end = null;
-      this._tmpEvent.speedX = null;
-      this._tmpEvent.speedY = null;
-      this._tmpEvent.screenX = touchEvent.screenX;
-      this._tmpEvent.screenY = touchEvent.screenY;
-      this._tmpEvent.clientX = touchEvent.clientX;
-      this._tmpEvent.clientY = touchEvent.clientY;
-      this._tmpEvent.pointerType = this.isTouched ? "touch" : "mouse";
-      this._tmpEvent.target = event.target;
-      this._tmpEvent.currentTarget = event.currentTarget;
-      this._tmpEvent.timeStamp = event.timeStamp;
-      this._tmpEvent.preventDefault = function () {
-        if (event.preventDefault !== undefined) {
-          event.preventDefault();
-        }
-      };
-      this._tmpEvent.stopPropagation = function () {
-        if (event.stopPropagation !== undefined) {
-          event.stopPropagation();
-        }
-      };
-      // Fire custom event
-      this.notify(this._tmpEvent);
-      // Save data for gesture and check
-      switch (type) {
-        case this.FIRE_EVENTS.down:
-          this._pointerDown(this._tmpEvent);
-          break;
-        case this.FIRE_EVENTS.move:
-          this._pointerMove(this._tmpEvent);
-          break;
-        case this.FIRE_EVENTS.chancel:
-        case this.FIRE_EVENTS.up:
-          this._pointerUp(this._tmpEvent);
-          break;
-      }
+      this._catch = false;
     }
-  };
+    switch (event.type) {
+      case this.TRACK_TOUCH_EVENTS.touchmove:
+      case this.TRACK_EVENTS.mousemove:
+        if (this._isDown) {
+          this._fireEvent(this.FIRE_EVENTS.move, event);
+        }
+        break;
+      case this.TRACK_TOUCH_EVENTS.touchstart:
+      case this.TRACK_EVENTS.mousedown:
+        this._isDown = true;
+        this._chancelId = false;
+        this._fireEvent(this.FIRE_EVENTS.down, event);
+        break;
+      case this.TRACK_TOUCH_EVENTS.touchend:
+      case this.TRACK_TOUCH_EVENTS.touchleave:
+      case this.TRACK_TOUCH_EVENTS.touchcancel:
+      case this.TRACK_EVENTS.mouseup:
+        if (this._isDown) {
+          this._isDown = false;
+          this._fireEvent(this.FIRE_EVENTS.up, event);
+        }
+        break;
+      case this.TRACK_EVENTS.mouseover:
+        if (this._isDown) {
+          this._fireEvent(this.FIRE_EVENTS.over, event);
+        }
+        break;
+      case this.TRACK_EVENTS.mouseout:
+        var pointerTracker = this;
+        if (this._isDown) {
+          this._chancelId = setTimeout(function () {
+            pointerTracker._isDown = false;
+            pointerTracker._fireEvent(pointerTracker.FIRE_EVENTS.chancel, event);
+            pointerTracker._chancelId = null;
+          }, 10);
+        }
+        break;
+    }
+  },
   /**
-   * Scrollbar for view
-   * @param {HTMLElement} container
-   * @param {Object} options
-   * @constructor
+   * @private
    */
-  function ScrollBar(container, options) {
-    options = mix({
-      className: "scrollbar",
-      direction: "vertical"
-    }, options);
-    this.direction = options.direction;
-    this._container = container;
-    this._bar = document.createElement("div");
-    this._bar.style.position = "absolute";
-    this._bar.className = options.className;
-    this._bar.style.opacity = 0;
-    this._container.appendChild(this._bar);
-    this._containerSize = 0;
-    this._position = 0;
-    this._max = 0;
-    this._translateArray = this.direction === "vertical" ? ["translate3d(0, ", 0, "px, 0)"] : ["translate3d(", 0, "px, 0, 0)"];
-  }
-
-  ScrollBar.prototype = {
-    /**
-     * @private
-     */
-    _transformName: addVendorPrefix("transform"),
-    /**
-     * @private
-     */
-    _transitionName: addVendorPrefix("transition"),
-    /**
-     * @public
-     */
-    setPosition: function (position) {
-      this._position = position;
-      this._translateArray[1] = -position * this._containerSize / this._max;
-      if (this._translateArray[1] <= 0) {
-        this._translateArray[1] = 0;
-      } else if (this._translateArray[1] >= this._containerSize) {
-        this._translateArray[1] = this._containerSize;
+  _pointerDown: function (event) {
+    this._tracks = {
+      start: {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        timeStamp: event.timeStamp
+      },
+      pre: {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        timeStamp: event.timeStamp
+      },
+      last: {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        timeStamp: event.timeStamp
+      },
+      end: {
+        clientX: event.clientX,
+        clientY: event.clientY,
+        timeStamp: event.timeStamp
       }
-      this._bar.style[this._transformName] = this._translateArray.join("");
-    },
-    /**
-     * @public
-     */
-    refresh: function (max) {
-      var bar = this;
-      this._max = max;
-      if (Math.max(0, max) === 0) {
-        this._bar.style.opacity = 0;
-      } else {
-        this._bar.style.opacity = 1;
-      }
-      if (this.direction === "vertical") {
-        this._bar.style.height = this._container.offsetHeight * (this._container.offsetHeight / (max + this._container.offsetHeight)) + "px";
-        this._containerSize = this._container.offsetHeight - this._bar.offsetHeight;
-      } else {
-        this._bar.style.width = this._container.offsetWidth * (this._container.offsetWidth / (max + this._container.offsetWidth)) + "px";
-        this._containerSize = this._container.offsetWidth - this._bar.offsetWidth;
-      }
-      this._bar.style[this._transitionName] = "transform 300ms";
-      this.setPosition(this._position);
-      setTimeout(function () {
-        bar._bar.style[bar._transitionName] = "transform 0ms";
-      }, 350);
+    };
+  },
+  /**
+   * @private
+   */
+  _pointerMove: function (event) {
+    if (event.timeStamp - this._tracks.last.timeStamp > 10) {
+      this._tracks.pre.clientX = this._tracks.last.clientX;
+      this._tracks.pre.clientY = this._tracks.last.clientY;
+      this._tracks.pre.timeStamp = this._tracks.last.timeStamp;
+      this._tracks.last.clientX = event.clientX;
+      this._tracks.last.clientY = event.clientY;
+      this._tracks.last.timeStamp = event.timeStamp;
     }
-  };
+  },
+  /**
+   *
+   * @param {Event} event
+   * @private
+   */
+  _pointerUp: function (event) {
+    var isMoved, isFling, pointer = this._tracks;
+    this._tracks.end.clientX = event.clientX;
+    this._tracks.end.clientY = event.clientY;
+    this._tracks.end.timeStamp = event.timeStamp;
+    function distance(x1, x2, y1, y2) {
+      return Math.pow(((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)), 0.5);
+    }
+
+    isMoved = Math.abs(
+        distance(pointer.start.clientX, pointer.end.clientX, pointer.start.clientY, pointer.end.clientY)) > 10;
+    isFling = Math.abs(
+        distance(pointer.end.clientX, pointer.pre.clientX, pointer.end.clientY, pointer.pre.clientY)) > 0;
+    if (isFling) {
+      this._tmpEvent.type = this.FIRE_EVENTS.fling;
+      this._tmpEvent.start = pointer.start;
+      this._tmpEvent.end = pointer.end;
+      this._tmpEvent.speedX =
+        (pointer.end.clientX - pointer.pre.clientX) / (pointer.end.timeStamp - pointer.pre.timeStamp);
+      this._tmpEvent.speedY =
+        (pointer.end.clientY - pointer.pre.clientY) / (pointer.end.timeStamp - pointer.pre.timeStamp);
+      this.notify(this._tmpEvent);
+    } else if (!isMoved) {
+      if (pointer.end.timeStamp - pointer.start.timeStamp > 300) {
+        this._tmpEvent.type = this.FIRE_EVENTS.longtap;
+        this.notify(this._tmpEvent);
+      } else {
+        this._tmpEvent.type = this.FIRE_EVENTS.tap;
+        this.notify(this._tmpEvent);
+      }
+    }
+    this._tracks = null;
+  },
+  /**
+   * @private
+   */
+  _fireEvent: function (type, event) {
+    var touchEvent = event, i, l;
+    // Get coordinates
+    if (this.isTouched) {
+      if (event.type === this.TRACK_TOUCH_EVENTS.touchstart) {
+        if (event.touches.length > 1) {
+          return;
+        }
+        touchEvent = event.touches[0];
+        this.touchID = event.touches[0].identifier;
+      } else {
+        if (!this.touchID) {
+          this.touchID = event.changedTouches[0].identifier;
+        }
+        for (i = 0, l = event.changedTouches.length; i < l; i += 1) {
+          touchEvent = event.changedTouches[i];
+          if (touchEvent.identifier === this.touchID) {
+            break;
+          }
+        }
+        if (touchEvent.identifier !== this.touchID) {
+          return;
+        }
+      }
+    } else {
+      this.touchID = 1; // Mouse
+    }
+    // Custom event
+    this._tmpEvent.type = type;
+    this._tmpEvent.start = null;
+    this._tmpEvent.end = null;
+    this._tmpEvent.speedX = null;
+    this._tmpEvent.speedY = null;
+    this._tmpEvent.screenX = touchEvent.screenX;
+    this._tmpEvent.screenY = touchEvent.screenY;
+    this._tmpEvent.clientX = touchEvent.clientX;
+    this._tmpEvent.clientY = touchEvent.clientY;
+    this._tmpEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
+    this._tmpEvent.target = event.target;
+    this._tmpEvent.currentTarget = event.currentTarget;
+    this._tmpEvent.timeStamp = event.timeStamp;
+    this._tmpEvent.preventDefault = function () {
+      if (event.preventDefault !== undefined) {
+        event.preventDefault();
+      }
+    };
+    this._tmpEvent.stopPropagation = function () {
+      if (event.stopPropagation !== undefined) {
+        event.stopPropagation();
+      }
+    };
+    // Fire custom event
+    this.notify(this._tmpEvent);
+    // Save data for gesture and check
+    switch (type) {
+      case this.FIRE_EVENTS.down:
+        this._pointerDown(this._tmpEvent);
+        break;
+      case this.FIRE_EVENTS.move:
+        this._pointerMove(this._tmpEvent);
+        break;
+      case this.FIRE_EVENTS.chancel:
+      case this.FIRE_EVENTS.up:
+        this._pointerUp(this._tmpEvent);
+        break;
+    }
+  }
+};
+
+/**
+ * Scrollbar for view
+ * @param {HTMLElement} container
+ * @param {Object} options
+ * @constructor
+ */
+function ScrollBar(container, options) {
+  options = mix({
+    className: 'scrollbar',
+    direction: 'vertical'
+  }, options);
+  this.direction = options.direction;
+  this._container = container;
+  this._bar = document.createElement('div');
+  this._bar.style.position = 'absolute';
+  this._bar.className = options.className;
+  this._bar.style.opacity = 0;
+  this._container.appendChild(this._bar);
+  this._containerSize = 0;
+  this._position = 0;
+  this._max = 0;
+  this._translateArray = this.direction === 'vertical' ? ['translate3d(0, ', 0, 'px, 0)'] : ['translate3d(', 0, 'px, 0, 0)'];
+}
+ScrollBar.prototype = {
+  /**
+   * @private
+   */
+  _transformName: addVendorPrefix('transform'),
+  /**
+   * @private
+   */
+  _transitionName: addVendorPrefix('transition'),
+  /**
+   * @public
+   */
+  setPosition: function (position) {
+    this._position = position;
+    this._translateArray[1] = -position * this._containerSize / this._max;
+    if (this._translateArray[1] <= 0) {
+      this._translateArray[1] = 0;
+    } else if (this._translateArray[1] >= this._containerSize) {
+      this._translateArray[1] = this._containerSize;
+    }
+    this._bar.style[this._transformName] = this._translateArray.join('');
+  },
+  /**
+   * @public
+   */
+  refresh: function (max) {
+    var bar = this;
+    this._max = max;
+    if (Math.max(0, max) === 0) {
+      this._bar.style.opacity = 0;
+    } else {
+      this._bar.style.opacity = 1;
+    }
+    if (this.direction === 'vertical') {
+      this._bar.style.height = this._container.offsetHeight * (this._container.offsetHeight / (max + this._container.offsetHeight)) + 'px';
+      this._containerSize = this._container.offsetHeight - this._bar.offsetHeight;
+    } else {
+      this._bar.style.width = this._container.offsetWidth * (this._container.offsetWidth / (max + this._container.offsetWidth)) + 'px';
+      this._containerSize = this._container.offsetWidth - this._bar.offsetWidth;
+    }
+    this._bar.style[this._transitionName] = 'transform 300ms';
+    this.setPosition(this._position);
+    setTimeout(function () {
+      bar._bar.style[bar._transitionName] = 'transform 0ms';
+    }, 350);
+  }
+};
+
+var ScrollViewJS = (function () {
   /**
    * Scroll wrapper with additional features
    * @param {HTMLElement} element
@@ -531,7 +483,7 @@
       resizeEvent: true,
       scroll: true,
       bounds: false,
-      direction: "vertical",
+      direction: 'vertical',
       marginMIN: 0,
       marginMAX: 0,
       onScroll: function (shift) {
@@ -547,14 +499,14 @@
       }
     }, options);
     // Initialize inner variables on creation
-    if (this._options.direction === "vertical") {
-      this._transitionArray = ["translate3d(0, ", 0, "px, 0)"];
-      this._coordName = "screenY";
-      this._speedName = "speedY";
+    if (this._options.direction === 'vertical') {
+      this._transitionArray = ['translate3d(0, ', 0, 'px, 0)'];
+      this._coordName = 'screenY';
+      this._speedName = 'speedY';
     } else {
-      this._transitionArray = ["translate3d(", 0, "px, 0, 0)"];
-      this._coordName = "screenX";
-      this._speedName = "speedX";
+      this._transitionArray = ['translate3d(', 0, 'px, 0, 0)'];
+      this._coordName = 'screenX';
+      this._speedName = 'speedX';
     }
     this._animParams = null; // move or not in current time scrolling view
     this._RafID = null; // ID of request animation frame
@@ -567,20 +519,20 @@
     this._root = element;
     this._wrapper = element.firstElementChild;
     // Prepare environment
-    validPosition = ["fixed", "relative", "absolute"];
+    validPosition = ['fixed', 'relative', 'absolute'];
     tmpVar = validPosition.indexOf(window.getComputedStyle(element, null).position);
     if (tmpVar === -1) {
       tmpVar = validPosition.indexOf(element.style.position);
     }
     if (tmpVar === -1) {
-      this._root.style.position = "relative";
+      this._root.style.position = 'relative';
     } else {
       this._root.style.position = validPosition[tmpVar];
     }
-    this._root.style.overflow = "hidden";
+    this._root.style.overflow = 'hidden';
     this._wrapper.style.margin = 0;
-    this._wrapper.style.position = "absolute";
-    this._wrapper.style[this._transitionName] = "transform 0ms";
+    this._wrapper.style.position = 'absolute';
+    this._wrapper.style[this._transitionName] = 'transform 0ms';
     for (event in this.TRACKING_EVENTS) {
       if (this.TRACKING_EVENTS.hasOwnProperty(event)) {
         this._root.addEventListener(this.TRACKING_EVENTS[event], this, false);
@@ -634,7 +586,7 @@
       } else {
         scrollView._RafID = window.requestAnimationFrame(scrollView._animationStep);
       }
-      scrollView._wrapper.style[scrollView._transformName] = scrollView._transitionArray.join("");
+      scrollView._wrapper.style[scrollView._transformName] = scrollView._transitionArray.join('');
       scrollView._shift = 0;
     };
     // Start
@@ -643,23 +595,23 @@
 
   ScrollViewJS.prototype = {
     TRACKING_EVENTS: {
-      resize: "resize",
-      up: "pointerup",
-      move: "pointermove",
-      down: "pointerdown",
-      chancel: "pointercancel",
-      fling: "fling"
+      resize: 'resize',
+      up: 'pointerup',
+      move: 'pointermove',
+      down: 'pointerdown',
+      chancel: 'pointercancel',
+      fling: 'fling'
     },
     _STRINGS: {
-      tweak: "tweak",
-      checkTweak: "checkTweak",
-      stop: "stop",
-      scroll: "scroll",
-      fling: "fling",
-      move: "move"
+      tweak: 'tweak',
+      checkTweak: 'checkTweak',
+      stop: 'stop',
+      scroll: 'scroll',
+      fling: 'fling',
+      move: 'move'
     },
-    _transitionName: addVendorPrefix("transition"),
-    _transformName: addVendorPrefix("transform"),
+    _transitionName: addVendorPrefix('transition'),
+    _transformName: addVendorPrefix('transform'),
     _calculateShift: function (now) {
       // If it first time of RAF loop - save timestamp for calculations
       if (this._animParams.startTime === null) {
@@ -795,7 +747,7 @@
       var rootWidth = this._root.offsetWidth, rootHeight = this._root.offsetHeight;
       window.cancelAnimationFrame(this._RafID);
       this._motionType = this._STRINGS.stop;
-      if (this._options.direction === "vertical") {
+      if (this._options.direction === 'vertical') {
         this._min = (rootHeight <= this._wrapper.clientHeight) ?
         rootHeight - this._wrapper.clientHeight - this._options.marginMAX : 0;
         this._margine = (this._options.bounds) ? Math.round(rootHeight / 3) : 0;
@@ -868,77 +820,8 @@
   };
   ScrollViewJS.ScrollBar = ScrollBar;
   ScrollViewJS.PointerWrapper = PointerWrapper;
-  (function () {
-    var proto;
-    proto = Object.create(HTMLDivElement.prototype);
-    proto.createdCallback = function () {
-      var element = this, refreshMthd,
-        options = parseOptions(this.getAttribute("options"));
-      if (this.isInited || !this.parentNode) {
-        return;
-      }
-      this.isInited = true;
-      if (options.scrollbar) {
-        this.scrollBar = new ScrollViewJS.ScrollBar(this, {
-          className: options.scrollbar,
-          direction: options.direction || "vertical"
-        });
-      }
-      options = mix({
-        // Decorate onScroll methods
-        onScrollBefore: function () {
-          var result = true;
-          if (typeof element.onScrollBefore === "function") {
-            result = element.onScrollBefore(arguments);
-          }
-          return result;
-        },
-        onScrollAfter: function () {
-          if (typeof element.onScrollAfter === "function") {
-            element.onScrollAfter(arguments);
-          }
-        },
-        onScroll: function () {
-          if (element.scrollBar) {
-            element.scrollBar.setPosition(arguments[1]);
-          }
-          if (typeof element.onScroll === "function") {
-            element.onScroll(arguments);
-          }
-        }
-      }, options);
-      this.scroller = new ScrollViewJS(this, options);
-      this.tracker = new PointerWrapper(this, this.scroller);
-      refreshMthd = this.scroller.refresh;
-      this.scroller.refresh = function () {
-        refreshMthd.apply(element.scroller, arguments);
-        if (element && element.scrollBar) {
-          element.scrollBar.refresh(-element.scroller._min);
-        }
-      };
-      // Decorate scroll methods
-      this.refresh = function () {
-        this.scroller.refresh();
-      };
-      this.scroll = function (shift, duration) {
-        this.scroller.scroll(shift, duration);
-      };
-      this.destroy = function () {
-        this.scroller.destroy();
-        this.tracker.destroy();
-      };
-    };
-    proto.attachedCallback = function () {
-      this.refresh();
-    };
-    proto.detachedCallback = function () {
-    };
-    proto.attributeChangedCallback = function (attrName, oldVal, newVal) {
-    };
-    return document.registerElement("x-scrollviewjs", {
-      extends: "div",
-      prototype: proto
-    });
-  }());
+  return ScrollViewJS;
+}());
+
   return ScrollViewJS;
 }));

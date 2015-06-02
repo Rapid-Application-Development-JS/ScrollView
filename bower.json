@@ -1,57 +1,59 @@
 {
-	"authors": [
-		"Yuriy Luchaninov <y.luchaninov@mobidev.biz>"
-	],
-	"contributors": [
-		{
-			"email": "a.trofimenko@mobidev.biz",
-			"name": "Anton Trofimenko"
-		},
-		{
-			"email": "y.luchaninov@mobidev.biz",
-			"name": "Yuriy Luchaninov"
-		}
-	],
-	"dependencies": {
-		"devicejs": "~0.*"
-	},
-	"description": "Scroll wrapper with additional features.",
-	"devDependencies": {
-		"grunt": "^0.4.*",
-		"grunt-contrib-clean": "^0.6.*",
-		"grunt-contrib-concat": "^0.5.*",
-		"grunt-contrib-copy": "^0.8.*",
-		"grunt-contrib-uglify": "^0.9.*",
-		"grunt-stripcomments": "^0.3.*",
-		"gulp": "^3.*",
-		"gulp-rename": "^1.2.*",
-		"gulp-sourcemaps": "^1.5.*",
-		"gulp-uglify": "^1.2.0",
-		"uglifyjs": "^2.*"
-	},
-	"homepage": "https://github.com/Rapid-Application-Development-JS/ScrollView",
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"keywords": [
-		"scroll",
-		"scroll_view",
-		"scroll-view"
-	],
-	"license": "MIT",
-	"main": [
-		"/release/scrollviewjs.min.js",
-		"/release/scrollviewjs.map"
-	],
-	"moduleType": [
-		"globals",
-		"amd",
-		"es6"
-	],
-	"name": "ScrollView",
-	"version": "0.0.1"
+  "authors": [
+    "Yuriy Luchaninov <y.luchaninov@mobidev.biz>"
+  ],
+  "contributors": [
+    {
+      "email": "a.trofimenko@mobidev.biz",
+      "name": "Anton Trofimenko"
+    },
+    {
+      "email": "y.luchaninov@mobidev.biz",
+      "name": "Yuriy Luchaninov"
+    }
+  ],
+  "dependencies": {
+    "devicejs": "~0.*"
+  },
+  "description": "Scroll wrapper with additional features.",
+  "devDependencies": {
+    "grunt": "^0.4.*",
+    "grunt-contrib-clean": "^0.6.*",
+    "grunt-contrib-concat": "^0.5.*",
+    "grunt-contrib-copy": "^0.8.*",
+    "grunt-contrib-uglify": "^0.9.*",
+    "grunt-stripcomments": "^0.3.*",
+    "gulp": "^3.*",
+    "gulp-rename": "^1.2.*",
+    "gulp-sourcemaps": "^1.5.*",
+    "gulp-uglify": "^1.2.0",
+    "uglifyjs": "^2.*"
+  },
+  "homepage": "https://github.com/Rapid-Application-Development-JS/ScrollView",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "scroll",
+    "scroll_view",
+    "scroll-view"
+  ],
+  "license": "MIT",
+  "main": [
+    "/release/scrollviewjs.min.js",
+    "/release/scrollviewjs.map",
+    "/release/x-scrollviewjs.min.js",
+    "/release/x-scrollviewjs.map"
+  ],
+  "moduleType": [
+    "globals",
+    "amd",
+    "es6"
+  ],
+  "name": "ScrollView",
+  "version": "0.0.1"
 }

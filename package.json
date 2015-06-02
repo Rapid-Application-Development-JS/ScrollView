@@ -26,8 +26,10 @@
 		"uglifyjs": "^2.*"
 	},
 	"directories": {
-		"docs": "docs",
-		"example": "example"
+		"doc": "doc",
+		"example": "example",
+		"lib": "source",
+		"man": "man"
 	},
 	"homepage": "https://github.com/Rapid-Application-Development-JS/ScrollView#readme",
 	"keywords": [
@@ -38,7 +40,9 @@
 	"license": "MIT",
 	"main": [
 		"/release/scrollviewjs.min.js",
-		"/release/scrollviewjs.map"
+		"/release/scrollviewjs.map",
+		"/release/x-scrollviewjs.min.js",
+		"/release/x-scrollviewjs.map"
 	],
 	"name": "scrollviewjs",
 	"private": false,
@@ -47,11 +51,7 @@
 		"url": "git+https://github.com/Rapid-Application-Development-JS/ScrollView.git"
 	},
 	"scripts": {
-		"build": "uglifyjs '/source/scrollview.js' --compress --mangle --screw-ie8 --comments --lint --source-map '/source/scrollview.map' --output '/release/scrollview.min.js'"
+		"build": "uglifyjs '/source/scrollviewjs.js' --compress --mangle --screw-ie8 --comments --lint --source-map '/source/scrollviewjs.map' --output '/release/scrollviewjs.min.js'"
 	},
-	"version": "0.0.1",
-	"directories": {
-		"doc": "docs",
-		"example": "example"
-	}
+	"version": "0.0.1"
 }

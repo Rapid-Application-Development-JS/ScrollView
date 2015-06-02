@@ -1,6 +1,6 @@
-(function (w) {
-  w.performance || (w.performance = {});
-  w.performance.now && (w.performance.now = performance.webkitNow || performance.mozNow || performance.msNow ||
+(function (_window) {
+  _window.performance || (_window.performance = {});
+  _window.performance.now && (_window.performance.now = performance.webkitNow || performance.mozNow || performance.msNow ||
     performance.oNow || function () {
       return Date.now()
     })

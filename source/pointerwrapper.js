@@ -17,11 +17,11 @@ function PointerWrapper(element, listener, context) {
   }
   this.attach(element);
   this._listener = listener;
-  if (typeof listener === "object") {
+  if (typeof listener === 'object') {
     this.notify = function (event) {
       this._listener.handleEvent(event);
     };
-  } else if (typeof context === "object") {
+  } else if (typeof context === 'object') {
     this.notify = function (event) {
       this._listener.apply(context, [event]);
     };
@@ -33,28 +33,28 @@ function PointerWrapper(element, listener, context) {
 }
 PointerWrapper.prototype = {
   TRACK_TOUCH_EVENTS: {
-    touchstart: "touchstart",
-    touchmove: "touchmove",
-    touchend: "touchend",
-    touchleave: "touchleave",
-    touchcancel: ".touchcancel"
+    touchstart: 'touchstart',
+    touchmove: 'touchmove',
+    touchend: 'touchend',
+    touchleave: 'touchleave',
+    touchcancel: '.touchcancel'
   },
   TRACK_EVENTS: {
-    mousedown: "mousedown",
-    mousemove: "mousemove",
-    mouseup: "mouseup",
-    mouseover: "mouseover",
-    mouseout: "mouseout"
+    mousedown: 'mousedown',
+    mousemove: 'mousemove',
+    mouseup: 'mouseup',
+    mouseover: 'mouseover',
+    mouseout: 'mouseout'
   },
   FIRE_EVENTS: {
-    up: "pointerup",
-    down: "pointerdown",
-    move: "pointermove",
-    over: "pointerover",
-    chancel: "pointercancel",
-    fling: "fling",
-    longtap: "longtap",
-    tap: "tap"
+    up: 'pointerup',
+    down: 'pointerdown',
+    move: 'pointermove',
+    over: 'pointerover',
+    chancel: 'pointercancel',
+    fling: 'fling',
+    longtap: 'longtap',
+    tap: 'tap'
   },
   /**
    * @type {boolean}
@@ -275,7 +275,7 @@ PointerWrapper.prototype = {
     this._tmpEvent.screenY = touchEvent.screenY;
     this._tmpEvent.clientX = touchEvent.clientX;
     this._tmpEvent.clientY = touchEvent.clientY;
-    this._tmpEvent.pointerType = this.isTouched ? "touch" : "mouse";
+    this._tmpEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
     this._tmpEvent.target = event.target;
     this._tmpEvent.currentTarget = event.currentTarget;
     this._tmpEvent.timeStamp = event.timeStamp;

@@ -2,6 +2,7 @@ var gulp = (function () {
   var config = require('./config.json');
   var libName = config['name'];
   var sourceFiles = config['sourceFiles'];
+  var sourceWebComponent = config['sourceWebComponent'];
   var folderSource = config['folderSource'];
   var folderCompiled = config['folderCompiled'];
   var gulp = require('gulp');
@@ -14,12 +15,20 @@ var gulp = (function () {
       .pipe(gulpConcat(libName + '.js'))
       .pipe(gulp.dest('./' + folderCompiled));
   });
+  gulp.task('webcomponent', function () {
+    return gulp.src(sourceWebComponent)
+      .pipe(gulpConcat('x-' + libName + '.js'))
+      .pipe(gulp.dest('./' + folderCompiled));
+  });
   gulp.task('watch', function () {
     gulp.watch('./' + folderSource, ['default']);
   });
-  gulp.task('default', ['scripts'], function () {
+  gulp.task('default', ['scripts', 'webcomponent'], function () {
     gulp
-      .src([folderCompiled + '/' + libName + '.js'])
+      .src([
+        folderCompiled + '/' + libName + '.js'
+        , folderCompiled + '/x-' + libName + '.js'
+      ])
       .pipe(gulpRename({
         extname: '.min.js'
       }))

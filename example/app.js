@@ -5,12 +5,11 @@ define("app", function () {
 	app.start = function (modules, data) {
 		app.modules = modules;
 		app.data = data;
-		$(app._domready);
-	};
-	app._domready = function () {
-		app._init();
-		app._createScrollVertical();
-		app._initScrollHorizontal();
+		$(function () {
+			app._init();
+			app._createScrollVertical();
+			app._initScrollHorizontal();
+		});
 	};
 	app._init = function () {
 		var zodiacsArr = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
@@ -22,26 +21,36 @@ define("app", function () {
 		this.zodiacs = zodiacs;
 	};
 	app._createScrollVertical = function () {
-		var ModuleScrollView = app.modules["scrollview"];
-		var $scroll = $("#scroll-vertical").get();
+		var ModuleScrollView = app.modules["scrollviewjs"];
+		var $scroll = $("#scroll-vertical").get(0);
 		var $scrollv = $scroll.parentNode;
 		var options = {};
 		options.direction = "vertical";
 		options.bounds = true;
 		options.scrollbar = "scrollbar-vertical";
+		options.onMoveBefore = function () {
+			return false;
+		};
+		options.onFlingBefore = function () {
+			return false;
+		};
+		options.onDownBefore = function () {
+			return false;
+		};
 		//
-		var capitalV = $("<div>");
-		capitalV.attr("id", "capital-v").addClass("capital");
-		$scrollv.appendChild(capitalV.get());
+		var $capitalV = $("<div>").attr("id", "capital-v").addClass("capital");
+		$scrollv.appendChild($capitalV.get(0));
 		//
 		function toggle(height, position, data) {
-			capitalV.html(data[Math.round((height - position) / (height / data.length))][0]);
+			var index = Math.round((height - position) / (height / data.length));
+			index < 0 && (index = 0);
+			$capitalV.html(data[index][0]);
 		}
 
 		// Decorate onScroll methods
 		options.onScrollBefore = function () {
 			// Fast Scroll capital letter
-			capitalV.css("opacity", 1).show();
+			$capitalV.css("opacity", 1).show();
 			toggle($scroll.offsetHeight, $scrollv.scrollHeight, app.data);
 			// Actual decorator
 			var result = true;
@@ -52,9 +61,9 @@ define("app", function () {
 		};
 		options.onScrollAfter = function () {
 			// Fast Scroll fadeout
-			capitalV.fadeIn();
+			$capitalV.fadeIn();
 			setTimeout(function () {
-				capitalV.hide();
+				$capitalV.hide();
 			}, 450);
 			// Actual decorator
 			if (typeof $scrollv.onScrollAfter === "function") {
@@ -63,7 +72,7 @@ define("app", function () {
 		};
 		options.onScroll = function (shift, position) {
 			// Fast Scroll capital letter
-			capitalV.css("opacity", 1).show();
+			$capitalV.css("opacity", 1).show();
 			toggle($scroll.offsetHeight, $scrollv.scrollHeight, app.data);
 			// Actual decorator
 			if ($scrollv.scrollBar) {
@@ -79,6 +88,14 @@ define("app", function () {
 		});
 		$scrollv.scroller = new ModuleScrollView($scrollv, options);
 		$scrollv.tracker = new ModuleScrollView.PointerWrapper($scrollv, $scrollv.scroller);
+
+		/*
+		$scrollv.tracker.notify = function () {
+			console.info("$scrollv.tracker.notify");
+			console.dir(arguments);
+		};
+		*/
+
 		var refreshMthd = $scrollv.scroller.refresh;
 		$scrollv.scroller.refresh = function () {
 			refreshMthd.apply($scrollv.scroller, arguments);
@@ -100,35 +117,95 @@ define("app", function () {
 		app._initScrollVertical();
 	};
 	app._initScrollVertical = function () {
-		var scroll = $("#scroll-vertical");
-		var ul = scroll.find("ul").get();
+		var $scroll = $("#scroll-vertical");
+		var $ul = $scroll.find("ul");
 		var docFrag = document.createDocumentFragment();
 		this.data.forEach(function (value) {
-			docFrag.appendChild($("<li>").html(value).get());
+			docFrag.appendChild($("<li>").html(value).get(0));
 		});
-		ul.appendChild(docFrag);
-		scroll.parent().get().refresh();
+		$ul.append(docFrag);
+		$scroll.parent().get(0).refresh();
+		app._fastScroll();
+	};
+	app._fastScroll = function () {
+		var $scroll = $("#scroll-vertical").parent().get(0);
+		var $scrollv = $("#scroll-vertical").get(0);
+		var scroller = $scroll.scroller;
+
+		function getRect(element) {
+			var rect = element.getBoundingClientRect();
+			return {
+				top: rect.top,
+				right: rect.right,
+				bottom: rect.bottom,
+				left: rect.left
+			};
+		}
+
+		function inScrollBarArea(rect, percent, scrollPosition, clientX, clientY) {
+			var scrollWidth = rect.right - rect.left;
+			var feelBlock = (scrollWidth / 100) * percent;
+			if (scrollPosition === "right") {
+				return (clientX <= rect.right) && (clientX >= (rect.right - feelBlock));
+			}
+		}
+
+		var rect = getRect($scroll);
+		var feelPercent = 50;
+		var scrollPosition = "right";
+		var isInScrollBarArea = function (x, y) {
+			return inScrollBarArea(rect, feelPercent, scrollPosition, x, y);
+		};
+		/*
+		scroller._options.onDownBefore = function (event) {
+			if (!isInScrollBarArea(event.clientX, event.clientY)) {
+				scroller.handleEvent(event, true);
+				return;
+			}
+			return false;
+		};
+		*/
+		scroller._options.onMoveBefore = function (event) {
+			if (!isInScrollBarArea(event.clientX, event.clientY)) {
+				scroller.handleEvent(event, true);
+				return;
+			}
+			var percent = ((event.clientY - rect.top) / (rect.bottom - rect.top) ) * 100;
+			var topIndent = ($scrollv.offsetHeight * percent) / 100;
+			scroller.jumpTo(topIndent);
+			if ($scroll.scrollBar) {
+				$scroll.scrollBar.setPosition(topIndent * -1);
+			}
+			return false;
+		};
+		/*
+		scroller._options.onFlingBefore = function (event) {
+			if (!isInScrollBarArea(event.clientX, event.clientY)) {
+				scroller.handleEvent(event, true);
+				return;
+			}
+			return false;
+		};
+		*/
 	};
 	app._initScrollHorizontal = function () {
-		var scroll = $("#scroll-horizontal");
-		var table = scroll.find("tbody").get();
+		var $scroll = $("#scroll-horizontal");
+		var table = $scroll.find("tbody");
 		var docFrag = document.createDocumentFragment();
-		var tr = $("<tr>").get();
+		var tr = $("<tr>");
 		this.zodiacs.forEach(function (zodiac) {
-			tr.appendChild($("<td>").addClass("symbol").addClass(zodiac).html("&nbsp;").get());
+			tr.append($("<td>").addClass("symbol").addClass(zodiac).html("&nbsp;"));
 		});
-		docFrag.appendChild(tr);
-		table.appendChild(docFrag);
+		docFrag.appendChild(tr.get(0));
+		table.append(docFrag);
 		docFrag = document.createDocumentFragment();
-		tr = $("<tr>").get();
+		tr = $("<tr>");
 		this.zodiacs.forEach(function (zodiac) {
-			tr.appendChild($("<td>").html(zodiac).get());
+			tr.append($("<td>").html(zodiac));
 		});
-		docFrag.appendChild(tr);
-		table.appendChild(docFrag);
-		var $xscroll = scroll.parent();
-		$xscroll.attr("is", "x-scrollviewjs");
-		$xscroll.get().refresh();
+		docFrag.appendChild(tr.get(0));
+		table.append(docFrag);
+		$scroll.parent().attr("is", "x-scrollviewjs").get(0).refresh();
 	};
 	return app;
 });

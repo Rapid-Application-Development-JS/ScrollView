@@ -4,11 +4,11 @@ Installation
 ###Bower
 
 ```bash
-bower install --save scrollviewjs
+bower install --save radjs-scrollview
 ```
 
 ###Node package manager
 
 ```bash
-npm install --save scrollviewjs
+npm install --save radjs-scrollview
 ```

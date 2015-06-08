@@ -12,12 +12,6 @@
 	},
 	"description": "Scroll wrapper with additional features.",
 	"devDependencies": {
-		"grunt": "^0.4.*",
-		"grunt-contrib-clean": "^0.6.*",
-		"grunt-contrib-concat": "^0.5.1",
-		"grunt-contrib-copy": "^0.8.*",
-		"grunt-contrib-uglify": "^0.9.*",
-		"grunt-stripcomments": "^0.3.*",
 		"gulp": "^3.*",
 		"gulp-concat": "^2.5.2",
 		"gulp-rename": "^1.2.*",
@@ -39,19 +33,16 @@
 	],
 	"license": "MIT",
 	"main": [
-		"/release/scrollviewjs.min.js",
-		"/release/scrollviewjs.map",
-		"/release/x-scrollviewjs.min.js",
-		"/release/x-scrollviewjs.map"
+		"/release/radjs-scrollview.min.js",
+		"/release/radjs-scrollview.map",
+		"/release/x-radjs-scrollview.min.js",
+		"/release/x-radjs-scrollview.map"
 	],
-	"name": "scrollviewjs",
+	"name": "radjs-scrollview",
 	"private": false,
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Rapid-Application-Development-JS/ScrollView.git"
 	},
-	"scripts": {
-		"build": "uglifyjs '/source/scrollviewjs.js' --compress --mangle --screw-ie8 --comments --lint --source-map '/source/scrollviewjs.map' --output '/release/scrollviewjs.min.js'"
-	},
-	"version": "0.0.1"
+	"version": "1.0.0"
 }

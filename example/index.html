@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
 	<meta charset="utf-8">
-	<title>Example: ScrollViewJS</title>
+	<title>Example: ScrollView</title>
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="stylesheet" href="vendors/github-fork-ribbon-css/gh-fork-ribbon.css">
@@ -41,14 +41,14 @@ var scrollOptions = {
 	&quot;className&quot;: &quot;scrollbar-vertical&quot;,
 	&quot;direction&quot;: &quot;vertical&quot;
 };
-$scroll.scrollBar = new ScrollViewJS.ScrollBar($scroll, scrollOptions);
+$scroll.scrollBar = new ScrollView.ScrollBar($scroll, scrollOptions);
 var scrollviewOptions = {
 	&quot;bounds&quot;: true
 };
-$scroll.scroller = new ScrollViewJS($scroll, scrollViewOptions);</code></pre>
+$scroll.scroller = new ScrollView($scroll, scrollViewOptions);</code></pre>
 				</div>
 				<div class="topcoat-grid__column--auto" id="container-vertical">
-					<div is="x-scrollviewjs2" options="direction: vertical; bounds: true; scrollbar: scrollbar-vertical;" class="scroll-vertical">
+					<div class="scroll-vertical">
 						<div class="scroll-content" id="scroll-vertical">
 							<ul></ul>
 						</div>
@@ -62,7 +62,7 @@ $scroll.scroller = new ScrollViewJS($scroll, scrollViewOptions);</code></pre>
 			</div>
 			<div class="topcoat-grid__row">
 				<div class="topcoat-grid__column--8 sv-code">
-<pre><code>&lt;div is="x-scrollviewjs" options="
+<pre><code>&lt;div is="x-radjs-scrollview" options="
 direction: horizontal; bounds: false; scrollbar: scrollhorizontal"&gt;
 	&lt;div class="scroll-content"&gt;
 		Content&hellip;
@@ -70,7 +70,7 @@ direction: horizontal; bounds: false; scrollbar: scrollhorizontal"&gt;
 &lt;/div&gt;</code></pre>
 				</div>
 				<div class="topcoat-grid__column--auto" id="container-horizontal">
-					<div is="x-scrollviewjs" options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;"
+					<div is="x-radjs-scrollview" options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;"
 						 class="scroll-horizontal">
 						<div class="scroll-content" id="scroll-horizontal">
 							<table>

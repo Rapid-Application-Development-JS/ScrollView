@@ -21,172 +21,175 @@ define("app", function () {
 		this.zodiacs = zodiacs;
 	};
 	app._createScrollVertical = function () {
-		var ModuleScrollView = app.modules["scrollviewjs"];
-		var $scroll = $("#scroll-vertical").get(0);
-		var $scrollv = $scroll.parentNode;
+		var ModuleScrollView = app.modules["radjs-scrollview"]; // Scroll view constructor
+		var $scrollContent = $("#scroll-vertical").get(0); // Content to be scrolled
+		var $scrollView = $scrollContent.parentNode; // Container for the content
 		var options = {};
 		options.direction = "vertical";
 		options.bounds = true;
-		options.scrollbar = "scrollbar-vertical";
-		options.onMoveBefore = function () {
-			return false;
-		};
-		options.onFlingBefore = function () {
-			return false;
-		};
-		options.onDownBefore = function () {
-			return false;
-		};
-		//
-		var $capitalV = $("<div>").attr("id", "capital-v").addClass("capital");
-		$scrollv.appendChild($capitalV.get(0));
-		//
-		function toggle(height, position, data) {
-			var index = Math.round((height - position) / (height / data.length));
-			index < 0 && (index = 0);
-			$capitalV.html(data[index][0]);
+		options.scrollbar = "scrollbar-vertical"; // CSS class
+		var $bookmark = $("<div>").attr("id", "bookmark").addClass("bookmark"); // Create bookmark element
+		$scrollView.appendChild($bookmark.get(0));
+		/**
+		 * Function that toggles letter in bookmark
+		 */
+		function bookmarkUpdate(height, position) {
+			var index = Math.round((height - position) / (height / app.data.length)); // calculate position on the data
+			if (index < 0) {
+				index = 0;
+			} else if (index + 1 > app.data.length) {
+				index = app.data.length - 1;
+			}
+			$bookmark.html(app.data[index][0]); // extract first letter
 		}
 
-		// Decorate onScroll methods
+		function bookmarkHide() {
+			$bookmark.fadeOut(); // Fast scroll bookmark fadeout when scrolling stopped
+			setTimeout(function () {
+				$bookmark.hide();
+			}, 450);
+		}
+
+		function bookmarkShow() {
+			$bookmark.css("opacity", 1).show(); // Fast Scroll effect with capital letter
+		}
+
+		/**
+		 * Decorate `onScrollBefore`
+		 * @return {boolean}
+		 */
 		options.onScrollBefore = function () {
-			// Fast Scroll capital letter
-			$capitalV.css("opacity", 1).show();
-			toggle($scroll.offsetHeight, $scrollv.scrollHeight, app.data);
-			// Actual decorator
+			bookmarkShow();
+			bookmarkUpdate($scrollContent.offsetHeight, $scrollView.scrollHeight);
+			// Call actual function
 			var result = true;
-			if (typeof $scrollv.onScrollBefore === "function") {
-				result = $scrollv.onScrollBefore(arguments);
+			if (typeof $scrollView.onScrollBefore === "function") {
+				result = $scrollView.onScrollBefore(arguments);
 			}
 			return result;
 		};
+		/**
+		 * Decorate `onScrollAfter`
+		 */
 		options.onScrollAfter = function () {
-			// Fast Scroll fadeout
-			$capitalV.fadeIn();
-			setTimeout(function () {
-				$capitalV.hide();
-			}, 450);
-			// Actual decorator
-			if (typeof $scrollv.onScrollAfter === "function") {
-				$scrollv.onScrollAfter(arguments);
+			bookmarkHide();
+			if (typeof $scrollView.onScrollAfter === "function") { // Call actual function
+				$scrollView.onScrollAfter(arguments);
 			}
 		};
 		options.onScroll = function (shift, position) {
-			// Fast Scroll capital letter
-			$capitalV.css("opacity", 1).show();
-			toggle($scroll.offsetHeight, $scrollv.scrollHeight, app.data);
-			// Actual decorator
-			if ($scrollv.scrollBar) {
-				$scrollv.scrollBar.setPosition(position);
+			bookmarkShow();
+			bookmarkUpdate($scrollContent.offsetHeight, $scrollView.scrollHeight);
+			if ($scrollView.scrollBar) { // If scroll bar defined
+				$scrollView.scrollBar.setPosition(position);
 			}
-			if (typeof $scrollv.onScroll === "function") {
-				$scrollv.onScroll(arguments);
+			if (typeof $scrollView.onScroll === "function") { // Call actual function
+				$scrollView.onScroll(arguments);
 			}
 		};
-		$scrollv.scrollBar = new ModuleScrollView.ScrollBar($scrollv, {
+		// Creacte custom scroll bar
+		$scrollView.scrollBar = new ModuleScrollView.ScrollBar($scrollView, {
 			className: options.scrollbar,
 			direction: options.direction || "vertical"
 		});
-		$scrollv.scroller = new ModuleScrollView($scrollv, options);
-		$scrollv.tracker = new ModuleScrollView.PointerWrapper($scrollv, $scrollv.scroller);
-
-		/*
-		$scrollv.tracker.notify = function () {
-			console.info("$scrollv.tracker.notify");
-			console.dir(arguments);
-		};
-		*/
-
-		var refreshMthd = $scrollv.scroller.refresh;
-		$scrollv.scroller.refresh = function () {
-			refreshMthd.apply($scrollv.scroller, arguments);
-			if ($scrollv && $scrollv.scrollBar) {
-				$scrollv.scrollBar.refresh(-$scrollv.scroller._min);
+		$scrollView.scroller = new ModuleScrollView($scrollView, options); // Create and attach view
+		// Create and attach custom pointer events, because of: IE support, SVG elements, and links bugs
+		$scrollView.tracker = new ModuleScrollView.PointerWrapper($scrollView, $scrollView.scroller);
+		var refreshMethod = $scrollView.scroller.refresh;
+		// Decorator for `refresh`
+		$scrollView.scroller.refresh = function () {
+			refreshMethod.apply($scrollView.scroller, arguments);
+			if ($scrollView && $scrollView.scrollBar) {
+				$scrollView.scrollBar.refresh(-$scrollView.scroller._min);
 			}
 		};
 		// Decorate scroll methods
-		$scrollv.refresh = function () {
-			$scrollv.scroller.refresh();
+		$scrollView.refresh = function () {
+			$scrollView.scroller.refresh();
 		};
-		$scrollv.scroll = function (shift, duration) {
-			$scrollv.scroller.scroll(shift, duration);
+		/**
+		 * Decorate scroll method
+		 */
+		$scrollView.scroll = function (shift, duration) {
+			$scrollView.scroller.scroll(shift, duration);
 		};
-		$scrollv.destroy = function () {
-			$scrollv.scroller.destroy();
-			$scrollv.tracker.destroy();
+		/**
+		 * Decorate destroy method
+		 */
+		$scrollView.destroy = function () {
+			$scrollView.scroller.destroy();
+			$scrollView.tracker.destroy();
 		};
-		app._initScrollVertical();
-	};
-	app._initScrollVertical = function () {
-		var $scroll = $("#scroll-vertical");
-		var $ul = $scroll.find("ul");
+		// Add content
+		var $ul = $($scrollContent).find("ul");
 		var docFrag = document.createDocumentFragment();
 		this.data.forEach(function (value) {
 			docFrag.appendChild($("<li>").html(value).get(0));
 		});
 		$ul.append(docFrag);
-		$scroll.parent().get(0).refresh();
-		app._fastScroll();
-	};
-	app._fastScroll = function () {
-		var $scroll = $("#scroll-vertical").parent().get(0);
-		var $scrollv = $("#scroll-vertical").get(0);
-		var scroller = $scroll.scroller;
+		$scrollContent.parentNode.refresh();
+		// Add fast scroll fucntionality
+		var scroller = $scrollView.scroller;
 
-		function getRect(element) {
+		function extractRect(element) {
 			var rect = element.getBoundingClientRect();
-			return {
-				top: rect.top,
-				right: rect.right,
-				bottom: rect.bottom,
-				left: rect.left
-			};
+			return {top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left};
 		}
 
-		function inScrollBarArea(rect, percent, scrollPosition, clientX, clientY) {
-			var scrollWidth = rect.right - rect.left;
-			var feelBlock = (scrollWidth / 100) * percent;
+		function inArea(rect, percent, scrollPosition, clientX, clientY) {
 			if (scrollPosition === "right") {
+				var scrollWidth = rect.right - rect.left;
+				var feelBlock = (scrollWidth * .01) * percent;
 				return (clientX <= rect.right) && (clientX >= (rect.right - feelBlock));
 			}
 		}
 
-		var rect = getRect($scroll);
-		var feelPercent = 50;
+		var rect = extractRect($scrollView);
+		var feelPercent = 33; // Scroll bar in right area starts to respond to touch after this percent
 		var scrollPosition = "right";
+		/**
+		 * Is pointer in scrollbar area
+		 */
 		var isInScrollBarArea = function (x, y) {
-			return inScrollBarArea(rect, feelPercent, scrollPosition, x, y);
+			return inArea(rect, feelPercent, scrollPosition, x, y); //
 		};
-		/*
+		// Change options on the fly
+		/**
+		 * When window is resized we should kkep an eye on our content
+		 */
+		scroller._options.onResizeAfter = function () {
+			rect = extractRect($scrollView); // Watch for element actual dimensions
+		};
 		scroller._options.onDownBefore = function (event) {
-			if (!isInScrollBarArea(event.clientX, event.clientY)) {
-				scroller.handleEvent(event, true);
+			if (!isInScrollBarArea(event.clientX, event.clientY)) { // The event took place outside of the scroll area
+				// You catch those event params, modify them and pass to handler method
+				// Example: scroller.handleEvent(event, true);
 				return;
 			}
-			return false;
+			return false; // prevent default action
 		};
-		*/
 		scroller._options.onMoveBefore = function (event) {
 			if (!isInScrollBarArea(event.clientX, event.clientY)) {
-				scroller.handleEvent(event, true);
 				return;
 			}
+			// Get pointer event for new scroll position
 			var percent = ((event.clientY - rect.top) / (rect.bottom - rect.top) ) * 100;
-			var topIndent = ($scrollv.offsetHeight * percent) / 100;
-			scroller.jumpTo(topIndent);
-			if ($scroll.scrollBar) {
-				$scroll.scrollBar.setPosition(topIndent * -1);
+			var topIndent = ($scrollContent.offsetHeight * percent) * .01;
+			scroller.jumpTo(topIndent); // Jump to position
+			if ($scrollView.scrollBar) { // Only if there is a scrollbar
+				$scrollView.scrollBar.setPosition(topIndent * -1);
 			}
+			// Update bookmark
+			bookmarkShow();
+			bookmarkUpdate($scrollContent.offsetHeight, $scrollView.scrollHeight);
 			return false;
 		};
-		/*
+		scroller._options.onUpBefore = function () {
+			bookmarkHide();
+		};
 		scroller._options.onFlingBefore = function (event) {
-			if (!isInScrollBarArea(event.clientX, event.clientY)) {
-				scroller.handleEvent(event, true);
-				return;
-			}
-			return false;
+			return isInScrollBarArea(event.clientX, event.clientY) === false; // prevent default action if needed
 		};
-		*/
 	};
 	app._initScrollHorizontal = function () {
 		var $scroll = $("#scroll-horizontal");
@@ -205,7 +208,7 @@ define("app", function () {
 		});
 		docFrag.appendChild(tr.get(0));
 		table.append(docFrag);
-		$scroll.parent().attr("is", "x-scrollviewjs").get(0).refresh();
+		$scroll.parent().attr("is", "x-radjs-scrollview").get(0).refresh(); // indicate that element is webcomponent
 	};
 	return app;
 });

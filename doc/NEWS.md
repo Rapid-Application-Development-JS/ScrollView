@@ -1,7 +1,7 @@
 Scroll View Release Notes
 ==========================
 
-Version 0.0.1 - May 8, 2015
+Version 1.0.0 - Jun 9, 2015
 ---------------------
 
 Initial release.

@@ -27,22 +27,22 @@
 			return undefined;
 		}
 		value = value.trim();
-		if (value.toLowerCase() === 'true') {
+		if (value.toLowerCase() === "true") {
 			return true;
 		}
-		if (value.toLowerCase() === 'false') {
+		if (value.toLowerCase() === "false") {
 			return false;
 		}
-		if (value.toLowerCase() === 'null') {
+		if (value.toLowerCase() === "null") {
 			return null;
 		}
-		if (value.toLowerCase() === 'undefined') {
+		if (value.toLowerCase() === "undefined") {
 			return undefined;
 		}
 		if (isNaN(value)) {
 			return value;
 		}
-		if (value.indexOf('.') !== 1) {
+		if (value.indexOf(".") !== 1) {
 			return parseFloat(value);
 		}
 		return parseInt(value, 10);
@@ -58,9 +58,9 @@
 		if (!string || !string.length) {
 			return result;
 		}
-		attrs = string.split(';');
+		attrs = string.split(";");
 		for (index = 0, length = attrs.length; index < length; index += 1) {
-			current = attrs[index].split(':');
+			current = attrs[index].split(":");
 			key = current[0].trim();
 			if (key.length) {
 				result[key] = parseValue(current[1]);
@@ -72,28 +72,28 @@
 	proto = Object.create(HTMLDivElement.prototype);
 	proto.createdCallback = function () {
 		var element = this, refreshMthd,
-			options = parseOptions(this.getAttribute('options'));
+			options = parseOptions(this.getAttribute("options"));
 		if (this.isInited || !this.parentNode) {
 			return;
 		}
 		this.isInited = true;
 		if (options.scrollbar) {
-			this.scrollBar = new ScrollViewJS.ScrollBar(this, {
+			this.scrollBar = new ScrollView.ScrollBar(this, {
 				className: options.scrollbar,
-				direction: options.direction || 'vertical'
+				direction: options.direction || "vertical"
 			});
 		}
 		options = mix({
 			// Decorate onScroll methods
 			onScrollBefore: function () {
 				var result = true;
-				if (typeof element.onScrollBefore === 'function') {
+				if (typeof element.onScrollBefore === "function") {
 					result = element.onScrollBefore(arguments);
 				}
 				return result;
 			},
 			onScrollAfter: function () {
-				if (typeof element.onScrollAfter === 'function') {
+				if (typeof element.onScrollAfter === "function") {
 					element.onScrollAfter(arguments);
 				}
 			},
@@ -101,13 +101,13 @@
 				if (element.scrollBar) {
 					element.scrollBar.setPosition(arguments[1]);
 				}
-				if (typeof element.onScroll === 'function') {
+				if (typeof element.onScroll === "function") {
 					element.onScroll(arguments);
 				}
 			}
 		}, options);
-		this.scroller = new ScrollViewJS(this, options);
-		this.tracker = new ScrollViewJS.PointerWrapper(this, this.scroller);
+		this.scroller = new ScrollView(this, options);
+		this.tracker = new ScrollView.PointerWrapper(this, this.scroller);
 		refreshMthd = this.scroller.refresh;
 		this.scroller.refresh = function () {
 			refreshMthd.apply(element.scroller, arguments);
@@ -134,8 +134,8 @@
 	};
 	proto.attributeChangedCallback = function (attrName, oldVal, newVal) {
 	};
-	return document.registerElement('x-scrollviewjs', {
-		extends: 'div',
+	return document.registerElement("x-radjs-scrollview", {
+		extends: "div",
 		prototype: proto
 	});
 }());

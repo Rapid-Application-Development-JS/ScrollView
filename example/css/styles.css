@@ -8,6 +8,9 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
+code {
+  font-weight: bold;
+}
 ::-moz-selection {
   background: black;
   color: yellow;
@@ -177,7 +180,7 @@ code {
     display: block;
   }
 }
-.capital {
+.bookmark {
   background-color: rgba(89, 91, 91, 0.8);
   border: 1px solid #595b5b;
   -webkit-border-radius: 12px;

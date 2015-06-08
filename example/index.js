@@ -5,16 +5,14 @@ require.config({
 		, "core-js": "vendors/core.js/client/core.min"
 		, "device": "vendors/device/device.min"
 		, "jquery": "vendors/jquery/jquery.min"
-		, "radjs-gesture": "vendors/radjs-gesture/release/gesture.min"
-		, "radjs-pointer": "vendors/radjs-pointer/release/pointer.min"
-		, "scrollviewjs": "../release/scrollviewjs"
+		, "radjs-scrollview": "vendors/radjs-scrollview/release/radjs-scrollview.min"
 		, "webcomponents": "vendors/webcomponentsjs/webcomponents-lite.min"
-		, "x-scrollviewjs": "../release/x-scrollviewjs"
+		, "x-radjs-scrollview": "vendors/radjs-scrollview/release/x-radjs-scrollview.min"
 	},
 	"shim": {
-		"app": {"deps": ["core-js", "jquery", "scrollviewjs"]}
-		, "scrollviewjs": {"deps": ["device", "webcomponents"]}
-		, "x-scrollviewjs": {"deps": ["scrollviewjs"]}
+		"app": {"deps": ["core-js", "jquery", "radjs-scrollview"]}
+		, "radjs-scrollview": {"deps": ["device", "webcomponents"]}
+		, "x-radjs-scrollview": {"deps": ["radjs-scrollview"]}
 	},
 	"waitSeconds": 0
 });

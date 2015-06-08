@@ -1,15 +1,15 @@
 (function (root, factory) {
-	if (typeof define === 'function' && define.amd) {
+	if (typeof define === "function" && define.amd) {
 		define(function () {
-			return (root.ScrollViewJS = factory());
+			return (root.ScrollView = factory());
 		});
-	} else if (typeof module === 'object' && module.exports) {
-		module.exports = (root.ScrollViewJS = factory());
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = (root.ScrollView = factory());
 	} else {
-		root.ScrollViewJS = factory();
+		root.ScrollView = factory();
 	}
 }(this, function () {
-	'use strict';
+	"use strict";
 
 /**
  * Add vendor prefix
@@ -17,7 +17,7 @@
  * @return {string}
  */
 function addVendorPrefix(property) {
-	var prefs = ['webkit', 'moz', 'ms', 'o'], index, $div = document.createElement('div'),
+	var prefs = ["webkit", "moz", "ms", "o"], index, $div = document.createElement("div"),
 		result = property.toLowerCase(), arrayOfPrefixes = [];
 
 	function capitalise(string) {
@@ -29,7 +29,7 @@ function addVendorPrefix(property) {
 	}
 	for (index = 0; index < arrayOfPrefixes.length; index += 1) {
 		if ($div.style[arrayOfPrefixes[index]] !== undefined) {
-			result = '-' + prefs[index] + '-' + property;
+			result = "-" + prefs[index] + "-" + property;
 			break;
 		}
 	}
@@ -67,11 +67,11 @@ function mix(old, newMixin) {
 
 (function (_window) {
 	var lastTime = 0;
-	var vendors = ['webkit', 'moz', 'ms', 'o'];
+	var vendors = ["webkit", "moz", "ms", "o"];
 	for (var x = 0; x < vendors.length && !_window.requestAnimationFrame; ++x) {
-		_window.requestAnimationFrame = _window[vendors[x] + 'RequestAnimationFrame'];
-		_window.cancelAnimationFrame = _window[vendors[x] + 'CancelAnimationFrame']
-			|| _window[vendors[x] + 'CancelRequestAnimationFrame'];
+		_window.requestAnimationFrame = _window[vendors[x] + "RequestAnimationFrame"];
+		_window.cancelAnimationFrame = _window[vendors[x] + "CancelAnimationFrame"]
+			|| _window[vendors[x] + "CancelRequestAnimationFrame"];
 	}
 	_window.requestAnimationFrame || (_window.requestAnimationFrame = function (callback) {
 		var currTime = Date.now();
@@ -107,11 +107,11 @@ function PointerWrapper(element, listener, context) {
 	}
 	this.attach(element);
 	this._listener = listener;
-	if (typeof listener === 'object') {
+	if (typeof listener === "object") {
 		this.notify = function (event) {
 			this._listener.handleEvent(event);
 		};
-	} else if (typeof context === 'object') {
+	} else if (typeof context === "object") {
 		this.notify = function (event) {
 			this._listener.apply(context, [event]);
 		};
@@ -123,28 +123,28 @@ function PointerWrapper(element, listener, context) {
 }
 PointerWrapper.prototype = {
 	TRACK_TOUCH_EVENTS: {
-		touchstart: 'touchstart',
-		touchmove: 'touchmove',
-		touchend: 'touchend',
-		touchleave: 'touchleave',
-		touchcancel: '.touchcancel'
+		touchstart: "touchstart",
+		touchmove: "touchmove",
+		touchend: "touchend",
+		touchleave: "touchleave",
+		touchcancel: ".touchcancel"
 	},
 	TRACK_EVENTS: {
-		mousedown: 'mousedown',
-		mousemove: 'mousemove',
-		mouseup: 'mouseup',
-		mouseover: 'mouseover',
-		mouseout: 'mouseout'
+		mousedown: "mousedown",
+		mousemove: "mousemove",
+		mouseup: "mouseup",
+		mouseover: "mouseover",
+		mouseout: "mouseout"
 	},
 	FIRE_EVENTS: {
-		up: 'pointerup',
-		down: 'pointerdown',
-		move: 'pointermove',
-		over: 'pointerover',
-		chancel: 'pointercancel',
-		fling: 'fling',
-		longtap: 'longtap',
-		tap: 'tap'
+		up: "pointerup",
+		down: "pointerdown",
+		move: "pointermove",
+		over: "pointerover",
+		chancel: "pointercancel",
+		fling: "fling",
+		longtap: "longtap",
+		tap: "tap"
 	},
 	/**
 	 * @type {boolean}
@@ -365,7 +365,7 @@ PointerWrapper.prototype = {
 		this._tmpEvent.screenY = touchEvent.screenY;
 		this._tmpEvent.clientX = touchEvent.clientX;
 		this._tmpEvent.clientY = touchEvent.clientY;
-		this._tmpEvent.pointerType = this.isTouched ? 'touch' : 'mouse';
+		this._tmpEvent.pointerType = this.isTouched ? "touch" : "mouse";
 		this._tmpEvent.target = event.target;
 		this._tmpEvent.currentTarget = event.currentTarget;
 		this._tmpEvent.timeStamp = event.timeStamp;
@@ -405,30 +405,30 @@ PointerWrapper.prototype = {
  */
 function ScrollBar(container, options) {
 	options = mix({
-		className: 'scrollbar',
-		direction: 'vertical'
+		className: "scrollbar",
+		direction: "vertical"
 	}, options);
 	this.direction = options.direction;
 	this._container = container;
-	this._bar = document.createElement('div');
-	this._bar.style.position = 'absolute';
+	this._bar = document.createElement("div");
+	this._bar.style.position = "absolute";
 	this._bar.className = options.className;
 	this._bar.style.opacity = 0;
 	this._container.appendChild(this._bar);
 	this._containerSize = 0;
 	this._position = 0;
 	this._max = 0;
-	this._translateArray = this.direction === 'vertical' ? ['translate3d(0, ', 0, 'px, 0)'] : ['translate3d(', 0, 'px, 0, 0)'];
+	this._translateArray = this.direction === "vertical" ? ["translate3d(0, ", 0, "px, 0)"] : ["translate3d(", 0, "px, 0, 0)"];
 }
 ScrollBar.prototype = {
 	/**
 	 * @private
 	 */
-	_transformName: addVendorPrefix('transform'),
+	_transformName: addVendorPrefix("transform"),
 	/**
 	 * @private
 	 */
-	_transitionName: addVendorPrefix('transition'),
+	_transitionName: addVendorPrefix("transition"),
 	/**
 	 * @public
 	 */
@@ -440,7 +440,7 @@ ScrollBar.prototype = {
 		} else if (this._translateArray[1] >= this._containerSize) {
 			this._translateArray[1] = this._containerSize;
 		}
-		this._bar.style[this._transformName] = this._translateArray.join('');
+		this._bar.style[this._transformName] = this._translateArray.join("");
 	},
 	/**
 	 * @public
@@ -453,22 +453,22 @@ ScrollBar.prototype = {
 		} else {
 			this._bar.style.opacity = 1;
 		}
-		if (this.direction === 'vertical') {
-			this._bar.style.height = this._container.offsetHeight * (this._container.offsetHeight / (max + this._container.offsetHeight)) + 'px';
+		if (this.direction === "vertical") {
+			this._bar.style.height = this._container.offsetHeight * (this._container.offsetHeight / (max + this._container.offsetHeight)) + "px";
 			this._containerSize = this._container.offsetHeight - this._bar.offsetHeight;
 		} else {
-			this._bar.style.width = this._container.offsetWidth * (this._container.offsetWidth / (max + this._container.offsetWidth)) + 'px';
+			this._bar.style.width = this._container.offsetWidth * (this._container.offsetWidth / (max + this._container.offsetWidth)) + "px";
 			this._containerSize = this._container.offsetWidth - this._bar.offsetWidth;
 		}
-		this._bar.style[this._transitionName] = 'transform 300ms';
+		this._bar.style[this._transitionName] = "transform 300ms";
 		this.setPosition(this._position);
 		setTimeout(function () {
-			bar._bar.style[bar._transitionName] = 'transform 0ms';
+			bar._bar.style[bar._transitionName] = "transform 0ms";
 		}, 350);
 	}
 };
 
-var ScrollViewJS = (function () {
+var ScrollView = (function () {
 	/**
 	 * Scroll wrapper with additional features
 	 * @param {HTMLElement} element
@@ -476,14 +476,14 @@ var ScrollViewJS = (function () {
 	 * @extends {EventListener}
 	 * @constructor
 	 */
-	function ScrollViewJS(element, options) {
+	function ScrollView(element, options) {
 		var scrollView = this, validPosition, tmpVar, event;
 		this._options = mix({
 			preventMove: true,
 			resizeEvent: true,
 			scroll: true,
 			bounds: false,
-			direction: 'vertical',
+			direction: "vertical",
 			marginMIN: 0,
 			marginMAX: 0,
 			onScroll: function (shift) {
@@ -499,14 +499,14 @@ var ScrollViewJS = (function () {
 			}
 		}, options);
 		// Initialize inner variables on creation
-		if (this._options.direction === 'vertical') {
-			this._transitionArray = ['translate3d(0, ', 0, 'px, 0)'];
-			this._coordName = 'screenY';
-			this._speedName = 'speedY';
+		if (this._options.direction === "vertical") {
+			this._transitionArray = ["translate3d(0, ", 0, "px, 0)"];
+			this._coordName = "screenY";
+			this._speedName = "speedY";
 		} else {
-			this._transitionArray = ['translate3d(', 0, 'px, 0, 0)'];
-			this._coordName = 'screenX';
-			this._speedName = 'speedX';
+			this._transitionArray = ["translate3d(", 0, "px, 0, 0)"];
+			this._coordName = "screenX";
+			this._speedName = "speedX";
 		}
 		this._animParams = null; // move or not in current time scrolling view
 		this._RafID = null; // ID of request animation frame
@@ -519,20 +519,20 @@ var ScrollViewJS = (function () {
 		this._root = element;
 		this._wrapper = element.firstElementChild;
 		// Prepare environment
-		validPosition = ['fixed', 'relative', 'absolute'];
+		validPosition = ["fixed", "relative", "absolute"];
 		tmpVar = validPosition.indexOf(window.getComputedStyle(element, null).position);
 		if (tmpVar === -1) {
 			tmpVar = validPosition.indexOf(element.style.position);
 		}
 		if (tmpVar === -1) {
-			this._root.style.position = 'relative';
+			this._root.style.position = "relative";
 		} else {
 			this._root.style.position = validPosition[tmpVar];
 		}
-		this._root.style.overflow = 'hidden';
+		this._root.style.overflow = "hidden";
 		this._wrapper.style.margin = 0;
-		this._wrapper.style.position = 'absolute';
-		this._wrapper.style[this._transitionName] = 'transform 0ms';
+		this._wrapper.style.position = "absolute";
+		this._wrapper.style[this._transitionName] = "transform 0ms";
 		for (event in this.TRACKING_EVENTS) {
 			if (this.TRACKING_EVENTS.hasOwnProperty(event)) {
 				this._root.addEventListener(this.TRACKING_EVENTS[event], this, false);
@@ -586,32 +586,32 @@ var ScrollViewJS = (function () {
 			} else {
 				scrollView._RafID = window.requestAnimationFrame(scrollView._animationStep);
 			}
-			scrollView._wrapper.style[scrollView._transformName] = scrollView._transitionArray.join('');
+			scrollView._wrapper.style[scrollView._transformName] = scrollView._transitionArray.join("");
 			scrollView._shift = 0;
 		};
 		// Start
 		this.refresh();
 	}
 
-	ScrollViewJS.prototype = {
+	ScrollView.prototype = {
 		TRACKING_EVENTS: {
-			resize: 'resize',
-			up: 'pointerup',
-			move: 'pointermove',
-			down: 'pointerdown',
-			chancel: 'pointercancel',
-			fling: 'fling'
+			resize: "resize",
+			up: "pointerup",
+			move: "pointermove",
+			down: "pointerdown",
+			chancel: "pointercancel",
+			fling: "fling"
 		},
 		_STRINGS: {
-			tweak: 'tweak',
-			checkTweak: 'checkTweak',
-			stop: 'stop',
-			scroll: 'scroll',
-			fling: 'fling',
-			move: 'move'
+			tweak: "tweak",
+			checkTweak: "checkTweak",
+			stop: "stop",
+			scroll: "scroll",
+			fling: "fling",
+			move: "move"
 		},
-		_transitionName: addVendorPrefix('transition'),
-		_transformName: addVendorPrefix('transform'),
+		_transitionName: addVendorPrefix("transition"),
+		_transformName: addVendorPrefix("transform"),
 		_calculateShift: function (now) {
 			// If it first time of RAF loop - save timestamp for calculations
 			if (this._animParams.startTime === null) {
@@ -747,7 +747,7 @@ var ScrollViewJS = (function () {
 			var rootWidth = this._root.offsetWidth, rootHeight = this._root.offsetHeight;
 			window.cancelAnimationFrame(this._RafID);
 			this._motionType = this._STRINGS.stop;
-			if (this._options.direction === 'vertical') {
+			if (this._options.direction === "vertical") {
 				this._min = (rootHeight <= this._wrapper.clientHeight) ?
 				rootHeight - this._wrapper.clientHeight - this._options.marginMAX : 0;
 				this._margine = (this._options.bounds) ? Math.round(rootHeight / 3) : 0;
@@ -794,20 +794,20 @@ var ScrollViewJS = (function () {
 			var scrollType, position = 0;
 			if (typeof to === "string") {
 				if(to.slice(-1) === "%") {
-					scrollType = "percent";
+					scrollType = 1; // percent
 				} else {
-					scrollType = "pixel";
+					scrollType = 0; // pixel
 				}
 				position = parseFloat(to);
 			} else if (to instanceof Element) {
-				scrollType = "element";
+				scrollType = 2; // element
 			} else {
-				scrollType = "pixel";
+				scrollType = 0; // pixel
 				position = parseFloat(to);
 			}
 			position < 0 && (position = 0);
 			switch (scrollType) {
-				case "pixel":
+				case 0: // pixel
 					var contentSize = 0;
 					if (this._options.direction == "vertical") {
 						contentSize = this._wrapper.offsetHeight - this._root.offsetHeight;
@@ -820,6 +820,12 @@ var ScrollViewJS = (function () {
 						position = parseInt(position);
 						this._wrapper.style[this._transformName] = "translate3d(" + position + "px, 0, 0)";
 					}
+					break;
+				case 1: //percent
+					// @todo implement
+					break;
+				case 2: //element
+					// @todo implement
 					break;
 			}
 		},
@@ -897,16 +903,16 @@ var ScrollViewJS = (function () {
 						if ((typeof that._options["onResizeAfter"] === "function") && (!ignoreBeforeAfter)) {
 							that._options["onResizeAfter"](event);
 						}
-					}, 150);
+					}, 250);
 					break;
 			}
 		}
 	};
-	ScrollViewJS.ScrollBar = ScrollBar;
-	ScrollViewJS.PointerWrapper = PointerWrapper;
-	return ScrollViewJS;
+	ScrollView.ScrollBar = ScrollBar;
+	ScrollView.PointerWrapper = PointerWrapper;
+	return ScrollView;
 }());
 
 
-	return ScrollViewJS;
+	return ScrollView;
 }));

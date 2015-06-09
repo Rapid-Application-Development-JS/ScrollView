@@ -41,11 +41,12 @@ It is recommended to use libraries like `RequireJS` or `SystemJS` for module loa
 ```javascript
 require.config({
 	"paths": {
-		 "radjs-scrollview": "vendors/radjs-scrollview/release/radjs-scrollview.min",
-			// If you want use scroll view as WebComponent include also these files
-		 "x-radjs-scrollview": "vendors/radjs-scrollview/release/x-radjs-scrollview.min",
-		 // Polyfill is no longer needed Chrome 36+, Opera 29+, Android Browser 4.4.4+, Chrome for Android 42+
-		 "webcomponents": "vendors/webcomponentsjs/webcomponents-lite.min"
+		"radjs-scrollview": "vendors/radjs-scrollview/release/radjs-scrollview.min",
+		// If you want use scroll view as WebComponent include also these files
+		"x-radjs-scrollview": "vendors/radjs-scrollview/release/x-radjs-scrollview.min",
+		// Polyfill is no longer needed for:
+		// Chrome 36+, Opera 29+, Android Browser 4.4.4+, Chrome for Android 42+
+		"webcomponents": "vendors/webcomponentsjs/webcomponents-lite.min"
 	}
 });
 require(["radjs-scrollview"]), function () {});
@@ -58,7 +59,8 @@ Options for webcomponent are taken from `options` attribute.
 **Note:** You can freely add `is` attribute after document loading.
 
 ```html
-<div is="x-radjs-scrollview" options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;">
+<div is="x-radjs-scrollview"
+	options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;">
 	<div class="scroll-content">
 		 <ul>
 				<li>Very long list</li>
@@ -78,7 +80,8 @@ new ScrollView(document.getElementById("scroll"), {direction: "vertical"});
 Full usage:
 
 ```javascript
-var $scrollContent = document.getElementById("content-scroll-vertical"); // Content to be scrolled
+ // Content to be scrolled
+var $scrollContent = document.getElementById("content-scroll-vertical");
 var $scrollView = $scrollContent.parentNode; // Container for the content
 var options = {
 	bounds: true,
@@ -89,9 +92,10 @@ $scrollView.scroll_bar = new ScrollView.ScrollBar($scrollView, {
 	className: options.scrollbar,
 	direction: options.direction
 }); // `scroll_bar` it's just a custom name
-// Create and attach view. `scroller` it's just a custom name, but in WebComponent it's predefined.
+// Create and attach ScrollView.
+// `scroller` it's just a custom name, but in WebComponent it's predefined.
 $scrollView.scroller = new ScrollView($scrollView, options);
-// Create and attach custom pointer events, because of: IE support, SVG elements, and links bugs
+// Create and attach custom pointer events, because of: IE support, SVG elements etc.
 // `tracker` is also custom name but it's also predefined in WebComponent
 $scrollView.tracker = new ScrollView.PointerWrapper($scrollView, $scrollView.scroller);
 ```

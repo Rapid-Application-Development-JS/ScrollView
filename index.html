@@ -1,341 +1,87 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+<head lang="en">
+	<meta charset="utf-8">
+	<title>Example: ScrollView</title>
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="vendors/github-fork-ribbon-css/gh-fork-ribbon.css">
+	<link rel="stylesheet" href="vendors/topcoat/css/topcoat-mobile-dark.min.css">
+	<link rel="stylesheet" href="vendors/topcoat-grid/css/grid.min.css">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="vendors/highlight/tomorrow-night-blue.min.css">
+	<script src="vendors/highlight/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+	<script src="vendors/requirejs/require.min.js" data-main="index.js"></script>
+</head>
+<body>
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>ScrollView by Rapid-Application-Development-JS</title>
-  </head>
-
-  <body>
-    <header>
-      <div class="inner">
-        <h1>ScrollView</h1>
-        <h2>Scroll wrapper with additional features.</h2>
-        <a href="https://github.com/Rapid-Application-Development-JS/ScrollView" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
-
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
-<a id="scrollview" class="anchor" href="#scrollview" aria-hidden="true"><span class="octicon octicon-link"></span></a>ScrollView</h1>
-
-<p>Scroll wrapper with additional features.</p>
-
-<h2>
-<a id="advantages" class="anchor" href="#advantages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Advantages:</h2>
-
-<ul>
-<li>Lightweight;</li>
-<li>Cross browser compatible;</li>
-<li>Tested on different devices and platforms;</li>
-<li>High performance, on the par and faster than other libraries;</li>
-<li>Can be used as library with declarative options and as WebComponent;</li>
-<li>Has fast and stable scroll events using JavaScript callbacks for everything;</li>
-<li>Has callback on lot of events like pointer down, scroll, fling, scroll beyond the borders etc.;</li>
-<li>Highly customizable. Scrollbar customizable too.</li>
-</ul>
-
-<h2>
-<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
-
-<p>Install using Bower.</p>
-
-<div class="highlight highlight-bash"><pre>bower install --save radjs-scrollview</pre></div>
-
-<p>Or using npm.</p>
-
-<div class="highlight highlight-bash"><pre>npm install --save radjs-scrollview</pre></div>
-
-<p>If you target browser without <code>Custom Element</code> support you should include WebComponents polyfill.</p>
-
-<div class="highlight highlight-bash"><pre>bower install --save webcomponentsjs</pre></div>
-
-<h2>
-<a id="include" class="anchor" href="#include" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include</h2>
-
-<p>It is recommended to use libraries like <code>RequireJS</code> or <code>SystemJS</code> for module loading to prevent global namespace pollution.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-c1">require</span>.config({
-    <span class="pl-s"><span class="pl-pds">"</span>paths<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
-         <span class="pl-s"><span class="pl-pds">"</span>radjs-scrollview<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vendors/radjs-scrollview/release/radjs-scrollview.min<span class="pl-pds">"</span></span>,
-            <span class="pl-c">// If you want use scroll view as WebComponent include also these files</span>
-         <span class="pl-s"><span class="pl-pds">"</span>x-radjs-scrollview<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vendors/radjs-scrollview/release/x-radjs-scrollview.min<span class="pl-pds">"</span></span>,
-         <span class="pl-c">// Polyfill is no longer needed Chrome 36+, Opera 29+, Android Browser 4.4.4+, Chrome for Android 42+</span>
-         <span class="pl-s"><span class="pl-pds">"</span>webcomponents<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vendors/webcomponentsjs/webcomponents-lite.min<span class="pl-pds">"</span></span>
-    }
-});
-<span class="pl-c1">require</span>([<span class="pl-s"><span class="pl-pds">"</span>radjs-scrollview<span class="pl-pds">"</span></span>]), <span class="pl-k">function</span> () {});</pre></div>
-
-<h2>
-<a id="use-as-webcomponent" class="anchor" href="#use-as-webcomponent" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use as WebComponent</h2>
-
-<p>After including <code>x-radjs-scrollview</code> file only thing you need to do is add attribute <code>is</code> to your HTML code.
-Options for webcomponent are taken from <code>options</code> attribute.
-<strong>Note:</strong> You can freely add <code>is</code> attribute after document loading.</p>
-
-<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">is</span>=<span class="pl-s"><span class="pl-pds">"</span>x-radjs-scrollview<span class="pl-pds">"</span></span> <span class="pl-e">options</span>=<span class="pl-s"><span class="pl-pds">"</span>direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>scroll-content<span class="pl-pds">"</span></span>&gt;
-         &lt;<span class="pl-ent">ul</span>&gt;
-                &lt;<span class="pl-ent">li</span>&gt;Very long list&lt;/<span class="pl-ent">li</span>&gt;
-         &lt;/<span class="pl-ent">ul</span>&gt;
-    &lt;/<span class="pl-ent">div</span>&gt;
-&lt;/<span class="pl-ent">div</span>&gt;</pre></div>
-
-<h2>
-<a id="usage-as-library" class="anchor" href="#usage-as-library" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage as library</h2>
-
-<p>Very simple usage, just to scrollable content.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">new</span> <span class="pl-en">ScrollView</span>(<span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>), {direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>});</pre></div>
-
-<p>Full usage:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scrollContent <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>content-scroll-vertical<span class="pl-pds">"</span></span>); <span class="pl-c">// Content to be scrolled</span>
-<span class="pl-k">var</span> $scrollView <span class="pl-k">=</span> $scrollContent.<span class="pl-c1">parentNode</span>; <span class="pl-c">// Container for the content</span>
-<span class="pl-k">var</span> options <span class="pl-k">=</span> {
-    bounds<span class="pl-k">:</span> <span class="pl-c1">true</span>,
-    direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>,
-    scrollbar<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>scrollbar-vertical<span class="pl-pds">"</span></span> <span class="pl-c">// CSS class</span>
+<div class="github-fork-ribbon-wrapper right">
+	<div class="github-fork-ribbon">
+		<a href="https://github.com/Rapid-Application-Development-JS/ScrollView" target="_blank">Fork us on GitHub</a>
+	</div>
+</div>
+<div class="main-container">
+	<div class="topcoat-navigation-bar">
+		<div class="topcoat-navigation-bar__item center full">
+			<h1 class="topcoat-navigation-bar__title">Scroll View</h1>
+		</div>
+	</div>
+	<div class="main main-blocks">
+		<div class="topcoat-grid">
+			<div class="topcoat-grid__row center">
+				<div class="topcoat-grid__column--auto">
+					<h3>Vertical&nbsp;Scroll</h3>
+				</div>
+			</div>
+			<div class="topcoat-grid__row">
+				<div class="topcoat-grid__column--8 sv-code">
+<pre><code>var $scroll = document.getElementById(&quot;scroll-vertical&quot;);
+var scrollOptions = {
+	&quot;className&quot;: &quot;scrollbar-vertical&quot;,
+	&quot;direction&quot;: &quot;vertical&quot;
 };
-$scrollView.scroll_bar <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView.ScrollBar</span>($scrollView, {
-    className<span class="pl-k">:</span> options.scrollbar,
-    direction<span class="pl-k">:</span> options.direction
-}); <span class="pl-c">// `scroll_bar` it's just a custom name</span>
-<span class="pl-c">// Create and attach view. `scroller` it's just a custom name, but in WebComponent it's predefined.</span>
-$scrollView.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scrollView, options);
-<span class="pl-c">// Create and attach custom pointer events, because of: IE support, SVG elements, and links bugs</span>
-<span class="pl-c">// `tracker` is also custom name but it's also predefined in WebComponent</span>
-$scrollView.tracker <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView.PointerWrapper</span>($scrollView, $scrollView.scroller);</pre></div>
-
-<p>See for more advanced usage in examples folder.</p>
-
-<h2>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h2>
-
-<h3>
-<a id="scrollview-creating-options" class="anchor" href="#scrollview-creating-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>
-<code>ScrollView</code> creating options.</h3>
-
-<h5>
-<a id="preventmove" class="anchor" href="#preventmove" aria-hidden="true"><span class="octicon octicon-link"></span></a>preventMove</h5>
-
-<p>Boolean, default is <em>true</em>. Prevent default on move event, also never works on input, textarea, button, select.</p>
-
-<h6>
-<a id="resizeevent" class="anchor" href="#resizeevent" aria-hidden="true"><span class="octicon octicon-link"></span></a>resizeEvent</h6>
-
-<p>Boolean, default is <em>true</em>. Track <code>Window</code> resize event.</p>
-
-<h6>
-<a id="scroll" class="anchor" href="#scroll" aria-hidden="true"><span class="octicon octicon-link"></span></a>scroll</h6>
-
-<p>Boolean, default is <em>true</em>. Scroll HTML element with content inside wrapper, not only tracking such event.</p>
-
-<h6>
-<a id="bounds" class="anchor" href="#bounds" aria-hidden="true"><span class="octicon octicon-link"></span></a>bounds</h6>
-
-<p>Boolean, default is <em>false</em>. Scroll event called beyound boundaries.</p>
-
-<h6>
-<a id="direction" class="anchor" href="#direction" aria-hidden="true"><span class="octicon octicon-link"></span></a>direction</h6>
-
-<p>String, default is "vertical". Scroll direction.</p>
-
-<h6>
-<a id="marginmin" class="anchor" href="#marginmin" aria-hidden="true"><span class="octicon octicon-link"></span></a>marginMIN</h6>
-
-<p>Number, default is zero. Minimal margin of HTML element, after refresh in example.</p>
-
-<h6>
-<a id="marginmax" class="anchor" href="#marginmax" aria-hidden="true"><span class="octicon octicon-link"></span></a>marginMAX</h6>
-
-<p>Number, default is zero. Maximum margin of scrollable content inside wrapper.</p>
-
-<h3>
-<a id="event-functions" class="anchor" href="#event-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Event functions</h3>
-
-<h6>
-<a id="onscrollbefore-shift-number" class="anchor" href="#onscrollbefore-shift-number" aria-hidden="true"><span class="octicon octicon-link"></span></a>onScrollBefore (shift: number)</h6>
-
-<p>Function, default is function that returns true. Function that called before scroll event happening. To start scrolling function should return <code>true</code>.</p>
-
-<h6>
-<a id="onscroll-shift-number-position-number" class="anchor" href="#onscroll-shift-number-position-number" aria-hidden="true"><span class="octicon octicon-link"></span></a>onScroll (shift: number, position: number)</h6>
-
-<p>Function, default is function that returns true. Function called when scroll happening.</p>
-
-<h6>
-<a id="onscrollafter-" class="anchor" href="#onscrollafter-" aria-hidden="true"><span class="octicon octicon-link"></span></a>onScrollAfter ()</h6>
-
-<p>Function, default is empty function. Function called after scroll ends, no arguments.</p>
-
-<h6>
-<a id="onscrolltypechange-scrolltype-string" class="anchor" href="#onscrolltypechange-scrolltype-string" aria-hidden="true"><span class="octicon octicon-link"></span></a>onScrollTypeChange (scrollType: string)</h6>
-
-<p>Function, default is empty function. Function called when scroll type changes.</p>
-
-<h3>
-<a id="additional-event-functions" class="anchor" href="#additional-event-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Additional event functions</h3>
-
-<p><code>onDownBefore</code> and <code>onDownAfter</code> - callbacks called before and after pointer down event.</p>
-
-<p><code>onMoveBefore</code> and <code>onMoveAfter</code> - callbacks called before and after pointer move event.</p>
-
-<p><code>onCancelBefore</code> and <code>onCancelAfter</code> - callbacks called before and after pointer cancel event.</p>
-
-<p><code>onUpBefore</code> and <code>onUpAfter</code> - callbacks called before and after pointer up event.</p>
-
-<p><code>onFlingBefore</code> and <code>onFlingAfter</code> - callbacks called before and after fling.</p>
-
-<p><code>onResizeBefore</code> and <code>onResizeAfter</code> - callbacks called before and after window resize.</p>
-
-<p>Example usage:</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-c1">options</span>.<span class="pl-en">onFlingBefore</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">event</span>) {
-    <span class="pl-c">// prevent default action if needed</span>
-    <span class="pl-c">// returning strictly boolean `false` will prevent handling this event</span>
-    <span class="pl-k">return</span> <span class="pl-c1">false</span>;
-};</pre></div>
-
-<h3>
-<a id="public-parameters-and-methods" class="anchor" href="#public-parameters-and-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Public parameters and methods</h3>
-
-<p><strong>constructor</strong></p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> preserve <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>(<span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>), {direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>});</pre></div>
-
-<p><strong>preventDefaultTags</strong></p>
-
-<p>Regular expression with tags that will not respond on pointer events.</p>
-
-<div class="highlight highlight-javascript"><pre>options.preventDefaultTags <span class="pl-k">=</span><span class="pl-sr"> <span class="pl-pds">/</span><span class="pl-k">^</span>(INPUT<span class="pl-k">|</span>TEXTAREA<span class="pl-k">|</span>BUTTON<span class="pl-k">|</span>SELECT)<span class="pl-k">$</span><span class="pl-pds">/</span></span>;</pre></div>
-
-<p><strong>easeFunc</strong></p>
-
-<p>Function to calculate easing time between animations.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-c1">$scrollView</span>.<span class="pl-en">easeFunc</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">microtime</span>) {
-    <span class="pl-k">return</span> microtime <span class="pl-k">*</span> (<span class="pl-c1">2</span> <span class="pl-k">-</span> microtime);
-};</pre></div>
-
-<p><strong>destroy</strong></p>
-
-<p>Detach <code>ScrollView</code> from HTML element.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scroll <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>);
-$scroll.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scroll, {direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>});
-<span class="pl-c">// ...</span>
-$scroll.scroller.destroy();</pre></div>
-
-<p><strong>refresh</strong></p>
-
-<p>Refresh scrollable content inside ScrollView.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scroll <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>);
-$scroll.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scroll, {direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>});
-<span class="pl-c">// ...</span>
-$scroll.scroller.refresh();</pre></div>
-
-<p><strong>scroll</strong></p>
-
-<p>Smooth content scroll to specified position for a specified time. You have to pass negative numbers.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scroll <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>);
-$scroll.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scroll, {direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>});
-$scroll.<span class="pl-c1">scroll</span>(<span class="pl-k">-</span><span class="pl-c1">640</span>, <span class="pl-c1">1000</span>);</pre></div>
-
-<p><strong>jumpTo</strong></p>
-
-<p>This method will <em>jump</em> content to position.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scroll <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>);
-$scroll.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scroll, {direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>});
-$scroll.jumpTo(<span class="pl-c1">640</span>);</pre></div>
-
-<p><strong>handleEvent</strong></p>
-
-<p>Handle event by <code>ScrollView</code>.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scrollView <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll<span class="pl-pds">"</span></span>);
-$scrollView.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scroll, {
-    direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>,
-    <span class="pl-en">onDownBefore</span>: <span class="pl-k">function</span> (<span class="pl-smi">event</span>) {
-         <span class="pl-k">if</span> (something_happend) {
-                <span class="pl-c">// You can catch those event params, modify them and pass to handler method</span>
-                $scrollView.scroller.<span class="pl-c1">handleEvent</span>(<span class="pl-c1">event</span>, <span class="pl-c1">true</span>);
-                <span class="pl-k">return</span>;
-         }
-         <span class="pl-k">return</span> <span class="pl-c1">false</span>; <span class="pl-c">// prevent default action</span>
-    }
-});</pre></div>
-
-<h3>
-<a id="internal-plugins" class="anchor" href="#internal-plugins" aria-hidden="true"><span class="octicon octicon-link"></span></a>Internal plugins</h3>
-
-<h3>
-<a id="scrollbar" class="anchor" href="#scrollbar" aria-hidden="true"><span class="octicon octicon-link"></span></a>ScrollBar</h3>
-
-<p>Create custom scroll bar.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scrollView <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll-wrapper<span class="pl-pds">"</span></span>);
-<span class="pl-k">var</span> options <span class="pl-k">=</span> {};
-$scrollView.scroll_bar <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView.ScrollBar</span>($scrollView, {
-    className<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>bem--scroll_bar<span class="pl-pds">"</span></span>,
-    direction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>vertical<span class="pl-pds">"</span></span>
-});
-<span class="pl-c1">options</span>.<span class="pl-en">onScroll</span> <span class="pl-k">=</span> <span class="pl-k">function</span> (<span class="pl-smi">shift</span>, <span class="pl-smi">position</span>) {
-    <span class="pl-k">if</span> ($scrollView.scroll_bar) { <span class="pl-c">// If scrollbar defined</span>
-         $scrollView.scroll_bar.setPosition(position);
-    }
-    <span class="pl-k">if</span> (<span class="pl-k">typeof</span> $scrollView.<span class="pl-c1">onScroll</span> <span class="pl-k">===</span> <span class="pl-s"><span class="pl-pds">"</span>function<span class="pl-pds">"</span></span>) {
-         $scrollView.<span class="pl-c1">onScroll</span>(arguments);
-    }
+$scroll.scrollBar = new ScrollView.ScrollBar($scroll, scrollOptions);
+var scrollviewOptions = {
+	&quot;bounds&quot;: true
 };
-$scrollView.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scrollView, options);</pre></div>
-
-<h3>
-<a id="pointerwrapper" class="anchor" href="#pointerwrapper" aria-hidden="true"><span class="octicon octicon-link"></span></a>PointerWrapper</h3>
-
-<p>Provide point events for DOM elements.</p>
-
-<div class="highlight highlight-javascript"><pre><span class="pl-k">var</span> $scrollView <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>scroll-wrapper<span class="pl-pds">"</span></span>);
-$scrollView.scroller <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView</span>($scrollView, {});
-$scrollView.tracker <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ScrollView.PointerWrapper</span>($scrollView, $scrollView.scroller);
-<span class="pl-c1">$scrollView</span>.<span class="pl-en">destroy</span> <span class="pl-k">=</span> <span class="pl-k">function</span> () {
-    $scrollView.scroller.destroy();
-    $scrollView.tracker.destroy();
-};</pre></div>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/Rapid-Application-Development-JS/ScrollView/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/Rapid-Application-Development-JS/ScrollView/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/Rapid-Application-Development-JS/ScrollView"></a> is maintained by <a href="https://github.com/Rapid-Application-Development-JS">Rapid-Application-Development-JS</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
-
-  
-  </body>
+$scroll.scroller = new ScrollView($scroll, scrollViewOptions);</code></pre>
+				</div>
+				<div class="topcoat-grid__column--auto" id="container-vertical">
+					<div class="scroll-vertical">
+						<div class="scroll-content" id="scroll-vertical">
+							<ul></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="topcoat-grid__row center">
+				<div class="topcoat-grid__column--auto">
+					<h3>Horizontal&nbsp;Scroll</h3>
+				</div>
+			</div>
+			<div class="topcoat-grid__row">
+				<div class="topcoat-grid__column--8 sv-code">
+<pre><code>&lt;div is="x-radjs-scrollview" options="
+direction: horizontal; bounds: false; scrollbar: scrollhorizontal"&gt;
+	&lt;div class="scroll-content"&gt;
+		Content&hellip;
+	&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+				</div>
+				<div class="topcoat-grid__column--auto" id="container-horizontal">
+					<div is="x-radjs-scrollview" options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;"
+						 class="scroll-horizontal">
+						<div class="scroll-content" id="scroll-horizontal">
+							<table>
+								<tbody class="zodiac"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
 </html>

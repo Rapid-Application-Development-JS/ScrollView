@@ -165,45 +165,78 @@ code {
 .sv-code {
   display: none;
 }
+@media (min-width: 320px) {
+  .scroll-horizontal,
+  .scroll-vertical {
+    min-height: 200px;
+  }
+}
+@media (min-width: 481px) {
+  .scroll-horizontal,
+  .scroll-vertical {
+    min-height: 200px;
+  }
+}
+@media (min-width: 641px) {
+  .scroll-horizontal,
+  .scroll-vertical {
+    min-height: 200px;
+  }
+}
 @media (min-width: 961px) {
   .sv-code {
     display: block;
+  }
+  .scroll-horizontal,
+  .scroll-vertical {
+    min-height: 200px;
   }
 }
 @media (min-width: 1025px) {
   .sv-code {
     display: block;
   }
+  .scroll-horizontal,
+  .scroll-vertical {
+    min-height: 300px;
+  }
 }
 @media (min-width: 1281px) {
   .sv-code {
     display: block;
   }
+  .scroll-horizontal,
+  .scroll-vertical {
+    min-height: 300px;
+  }
 }
 .bookmark {
-  background-color: rgba(89, 91, 91, 0.8);
-  border: 1px solid #595b5b;
+  background-color: rgba(89, 91, 91, 0.75);
+  border: 3px solid #595b5b;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
   -o-border-radius: 12px;
   border-radius: 12px;
-  -webkit-box-shadow: 0 0 8px #595b5b;
-  -moz-box-shadow: 0 0 8px #595b5b;
-  -ms-box-shadow: 0 0 8px #595b5b;
-  -o-box-shadow: 0 0 8px #595b5b;
-  box-shadow: 0 0 8px #595b5b;
+  -webkit-box-shadow: 0 0 16px #595b5b;
+  -moz-box-shadow: 0 0 16px #595b5b;
+  -ms-box-shadow: 0 0 16px #595b5b;
+  -o-box-shadow: 0 0 16px #595b5b;
+  box-shadow: 0 0 16px #595b5b;
   display: none;
   font-size: 48px;
+  font-weight: bolder;
+  left: calc((100% - 74px) / 2);
   min-height: 74px;
   min-width: 74px;
   padding-bottom: -8px;
   padding-top: 8px;
   position: absolute;
-  right: 25%;
   text-align: center;
-  text-shadow: 0 1px 1px #f4f4f4;
-  top: 62px;
+  -webkit-text-stroke-color: rgba(89, 91, 91, 0.9);
+  -webkit-text-stroke-width: 2px;
+  text-shadow: 3px 3px 0 rgba(89, 91, 91, 0.9), -1px -1px 0 rgba(89, 91, 91, 0.9), 1px -1px 0 rgba(89, 91, 91, 0.9), -1px 1px 0 rgba(89, 91, 91, 0.9), 1px 1px 0 rgba(89, 91, 91, 0.9);
+  top: calc((100% - 74px) / 2);
 }
 .bar {
   background-color: rgba(255, 0, 0, 0.8);

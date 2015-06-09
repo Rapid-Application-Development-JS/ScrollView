@@ -87,7 +87,7 @@ define("app", function () {
 				$scrollView.onScroll(arguments);
 			}
 		};
-		// Creacte custom scroll bar
+		// Create custom scroll bar
 		$scrollView.scrollBar = new ModuleScrollView.ScrollBar($scrollView, {
 			className: options.scrollbar,
 			direction: options.direction || "vertical"

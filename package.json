@@ -8,7 +8,7 @@
 		"Yuriy Luchaninov <y.luchaninov@mobidev.biz>"
 	],
 	"dependencies": {
-		"devicejs": "~0.*"
+		"radjs-gesture": "*"
 	},
 	"description": "Scroll wrapper with additional features.",
 	"devDependencies": {
@@ -44,5 +44,5 @@
 		"type": "git",
 		"url": "git+https://github.com/Rapid-Application-Development-JS/ScrollView.git"
 	},
-	"version": "1.0.0"
+	"version": "1.0.1"
 }

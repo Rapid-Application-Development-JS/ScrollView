@@ -1,53 +1,53 @@
 {
-  "authors": [
-    "Yuriy Luchaninov <y.luchaninov@mobidev.biz>"
-  ],
-  "contributors": [
-    {
-      "email": "a.trofimenko@mobidev.biz",
-      "name": "Anton Trofimenko"
-    },
-    {
-      "email": "y.luchaninov@mobidev.biz",
-      "name": "Yuriy Luchaninov"
-    }
-  ],
-  "dependencies": {
-    "devicejs": "~0.*"
-  },
-  "description": "Scroll wrapper with additional features.",
-  "devDependencies": {
-    "gulp": "^3.*",
-    "gulp-rename": "^1.2.*",
-    "gulp-sourcemaps": "^1.5.*",
-    "gulp-uglify": "^1.2.0",
-    "uglifyjs": "^2.*"
-  },
-  "homepage": "https://github.com/Rapid-Application-Development-JS/ScrollView",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "keywords": [
-    "scroll",
-    "scroll_view",
-    "scroll-view"
-  ],
-  "license": "MIT",
-  "main": [
-    "/release/radjs-scrollview.min.js",
-    "/release/radjs-scrollview.map",
-    "/release/x-radjs-scrollview.min.js",
-    "/release/x-radjs-scrollview.map"
-  ],
-  "moduleType": [
-    "globals",
-    "amd",
-    "es6"
-  ],
-  "name": "radjs-scrollview",
-  "version": "1.0.0"
+	"authors": [
+		"Yuriy Luchaninov <y.luchaninov@mobidev.biz>"
+	],
+	"contributors": [
+		{
+			"email": "a.trofimenko@mobidev.biz",
+			"name": "Anton Trofimenko"
+		},
+		{
+			"email": "y.luchaninov@mobidev.biz",
+			"name": "Yuriy Luchaninov"
+		}
+	],
+	"dependencies": {
+		"radjs-gesture": "*"
+	},
+	"description": "Scroll wrapper with additional features.",
+	"devDependencies": {
+		"gulp": "^3.*",
+		"gulp-rename": "^1.2.*",
+		"gulp-sourcemaps": "^1.5.*",
+		"gulp-uglify": "^1.2.0",
+		"uglifyjs": "^2.*"
+	},
+	"homepage": "https://github.com/Rapid-Application-Development-JS/ScrollView",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	],
+	"keywords": [
+		"scroll",
+		"scroll_view",
+		"scroll-view"
+	],
+	"license": "MIT",
+	"main": [
+		"/release/radjs-scrollview.min.js",
+		"/release/radjs-scrollview.map",
+		"/release/x-radjs-scrollview.min.js",
+		"/release/x-radjs-scrollview.map"
+	],
+	"moduleType": [
+		"globals",
+		"amd",
+		"es6"
+	],
+	"name": "radjs-scrollview",
+	"version": "1.0.1"
 }

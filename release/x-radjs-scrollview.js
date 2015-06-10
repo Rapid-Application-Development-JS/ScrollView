@@ -1,4 +1,18 @@
-(function () {
+(function (root, factory) {
+	if (typeof define === "function" && define.amd) {
+		define("x-radjs-scrollview", [
+				"radjs-scrollview", "radjs-pointer", "radjs-gesture"
+			], function (RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture) {
+				return factory(RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture);
+			}
+		);
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory(require("radjs-scrollview"), require("radjs-pointer"), require("radjs-gesture"));
+	} else {
+		factory(root.RADJS_ScrollView, root.PointerTracker, root.GestureTracker);
+	}
+}(this, function (RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture) {
+	"use strict";
 	var proto;
 
 	/**
@@ -78,7 +92,7 @@
 		}
 		this.isInited = true;
 		if (options.scrollbar) {
-			this.scrollBar = new ScrollView.ScrollBar(this, {
+			this.scrollBar = new RADJS_ScrollView.ScrollBar(this, {
 				className: options.scrollbar,
 				direction: options.direction || "vertical"
 			});
@@ -106,8 +120,10 @@
 				}
 			}
 		}, options);
-		this.scroller = new ScrollView(this, options);
-		this.tracker = new ScrollView.PointerWrapper(this, this.scroller);
+		this.scroller = new RADJS_ScrollView(this, options);
+		this._pointer = new RADJS_Pointer(this);
+		this._pointer.setMoveHoverState(false);
+		this._gesture = new RADJS_Gesture(this);
 		refreshMthd = this.scroller.refresh;
 		this.scroller.refresh = function () {
 			refreshMthd.apply(element.scroller, arguments);
@@ -138,4 +154,4 @@
 		extends: "div",
 		prototype: proto
 	});
-}());
+}));

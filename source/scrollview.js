@@ -17,10 +17,8 @@ var ScrollView = (function () {
 			marginMIN: 0,
 			marginMAX: 0,
 			onScroll: function (shift) {
-				console.dir(shift);
 			},
 			onScrollBefore: function (shift) {
-				console.dir(shift);
 				return true;
 			},
 			onScrollAfter: function () {
@@ -439,7 +437,6 @@ var ScrollView = (function () {
 		}
 	};
 	ScrollView.ScrollBar = ScrollBar;
-	ScrollView.PointerWrapper = PointerWrapper;
 	return ScrollView;
 }());
 

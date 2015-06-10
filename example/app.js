@@ -94,7 +94,9 @@ define("app", function () {
 		});
 		$scrollView.scroller = new ModuleScrollView($scrollView, options); // Create and attach view
 		// Create and attach custom pointer events, because of: IE support, SVG elements, and links bugs
-		$scrollView.tracker = new ModuleScrollView.PointerWrapper($scrollView, $scrollView.scroller);
+		$scrollView._pointer = new app.modules["radjs-pointer"]($scrollView);
+		$scrollView._pointer.setMoveHoverState(false);
+		$scrollView._gesture = new app.modules["radjs-gesture"]($scrollView);
 		var refreshMethod = $scrollView.scroller.refresh;
 		// Decorator for `refresh`
 		$scrollView.scroller.refresh = function () {
@@ -118,7 +120,8 @@ define("app", function () {
 		 */
 		$scrollView.destroy = function () {
 			$scrollView.scroller.destroy();
-			$scrollView.tracker.destroy();
+			$scrollView._pointer.destroy();
+			$scrollView._gesture.destroy();
 		};
 		// Add content
 		var $ul = $($scrollContent).find("ul");
@@ -145,7 +148,7 @@ define("app", function () {
 		}
 
 		var rect = extractRect($scrollView);
-		var feelPercent = 33; // Scroll bar in right area starts to respond to touch after this percent
+		var feelPercent = 25; // Scroll bar in right area starts to respond to touch after this percent
 		var scrollPosition = "right";
 		/**
 		 * Is pointer in scrollbar area

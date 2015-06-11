@@ -88,13 +88,19 @@ define("app", function () {
 			}
 		};
 		// Create custom scroll bar
-		$scrollView.scrollBar = new ModuleScrollView.ScrollBar($scrollView, {
+		$scrollView.scrollBar = new app.modules["radjs-scrollview"].ScrollBar($scrollView, {
 			className: options.scrollbar,
 			direction: options.direction || "vertical"
 		});
-		$scrollView.scroller = new ModuleScrollView($scrollView, options); // Create and attach view
-		// Create and attach custom pointer events, because of: IE support, SVG elements, and links bugs
-		$scrollView.tracker = new ModuleScrollView.PointerWrapper($scrollView, $scrollView.scroller);
+		$scrollView.scroller = new app.modules["radjs-scrollview"]($scrollView, options); // Create and attach view
+		// Create and attach custom pointer events, because of: IE < 11 support, SVG elements, and links bugs
+		$scrollView.pointer = new app.modules["radjs-pointer"]($scrollView);
+		$scrollView.pointer.setMoveHoverState(false);
+		// Actually pointer events currently supported almost everywhere, but buggy and not configurable
+		// You can replace "radjs-pointer" with other library or even remove it
+		$scrollView.gesture = new app.modules["radjs-gesture"]($scrollView);
+		// At this point gesture events supported for any browser and device.
+		// You can replace it with your library that supports events like: hold, fling, longtap, tap, doubletap
 		var refreshMethod = $scrollView.scroller.refresh;
 		// Decorator for `refresh`
 		$scrollView.scroller.refresh = function () {
@@ -118,7 +124,8 @@ define("app", function () {
 		 */
 		$scrollView.destroy = function () {
 			$scrollView.scroller.destroy();
-			$scrollView.tracker.destroy();
+			$scrollView.pointer.destroy();
+			$scrollView.gesture.destroy();
 		};
 		// Add content
 		var $ul = $($scrollContent).find("ul");
@@ -128,6 +135,7 @@ define("app", function () {
 		});
 		$ul.append(docFrag);
 		$scrollContent.parentNode.refresh();
+
 		// Add fast scroll fucntionality
 		var scroller = $scrollView.scroller;
 
@@ -145,7 +153,16 @@ define("app", function () {
 		}
 
 		var rect = extractRect($scrollView);
-		var feelPercent = 33; // Scroll bar in right area starts to respond to touch after this percent
+		var feelPercent = 20; // Scroll bar in right area starts to respond to touch after this percent
+		$scrollView.appendChild($("<div>").css({
+			backgroundColor: "rgba(0, 0, 0, .03)",
+			bottom: 0,
+			cursor: "ns-resize",
+			position: "absolute",
+			right: 0,
+			top: 0,
+			width: feelPercent + "%"
+		}).get(0)); // Shady layer showing the user scroll border, can be removed
 		var scrollPosition = "right";
 		/**
 		 * Is pointer in scrollbar area
@@ -160,6 +177,7 @@ define("app", function () {
 		scroller._options.onResizeAfter = function () {
 			rect = extractRect($scrollView); // Watch for element actual dimensions
 		};
+
 		scroller._options.onDownBefore = function (event) {
 			if (!isInScrollBarArea(event.clientX, event.clientY)) { // The event took place outside of the scroll area
 				// You catch those event params, modify them and pass to handler method

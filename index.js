@@ -2,17 +2,16 @@ require.config({
 	"baseUrl": "",
 	"paths": {
 		"app": "app"
-		, "core-js": "vendors/core.js/client/core.min"
-		, "device": "vendors/device/device.min"
-		, "jquery": "vendors/jquery/jquery.min"
-		, "radjs-scrollview": "vendors/radjs-scrollview/release/radjs-scrollview.min"
-		, "webcomponents": "vendors/webcomponentsjs/webcomponents-lite.min"
-		, "x-radjs-scrollview": "vendors/radjs-scrollview/release/x-radjs-scrollview.min"
+		, "core-js": "bower_components/core.js/client/core.min"
+		, "jquery": "bower_components/jquery/dist/jquery.min"
+		, "radjs-pointer": "bower_components/radjs-pointer/release/pointer.min"
+		, "radjs-gesture": "bower_components/radjs-gesture/release/gesture.min"
+		, "radjs-scrollview": "bower_components/radjs-scrollview/release/radjs-scrollview.min"
+		, "webcomponentsjs": "bower_components/webcomponentsjs/webcomponents-lite.min"
+		, "x-radjs-scrollview": "bower_components/radjs-scrollview/release/x-radjs-scrollview.min"
 	},
 	"shim": {
-		"app": {"deps": ["core-js", "jquery", "radjs-scrollview"]}
-		, "radjs-scrollview": {"deps": ["device", "webcomponents"]}
-		, "x-radjs-scrollview": {"deps": ["radjs-scrollview"]}
+		"app": {"deps": ["core-js", "jquery", "x-radjs-scrollview"]}
 	},
 	"waitSeconds": 0
 });

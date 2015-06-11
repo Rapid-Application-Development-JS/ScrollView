@@ -3,6 +3,16 @@ ScrollView
 
 Scroll wrapper with additional features.
 
+## About
+
+[Scroll View GitHub Pages](http://rapid-application-development-js.github.io/ScrollView/)
+
+[RAD.JS: Tookit & framework for javascript application development](https://github.com/Rapid-Application-Development-JS/)
+
+[RAD.JS Blog](http://rad-js.com/)
+
+[MobiDev Software Development Company](http://mobidev.biz/)
+
 ## Advantages:
 
 * Lightweight;
@@ -74,7 +84,7 @@ Options for webcomponent are taken from `options` attribute.
 Very simple usage, just to scrollable content.
 
 ```javascript
-new ScrollView(document.getElementById("scroll"), {direction: "vertical"});
+new RADJS_ScrollView(document.getElementById("scroll"), {direction: "vertical"});
 ```
 
 Full usage:
@@ -88,23 +98,23 @@ var options = {
 	direction: "vertical",
 	scrollbar: "scrollbar-vertical" // CSS class
 };
-$scrollView.scroll_bar = new ScrollView.ScrollBar($scrollView, {
+$scrollView.scroll_bar = new RADJS_ScrollView.ScrollBar($scrollView, {
 	className: options.scrollbar,
 	direction: options.direction
 }); // `scroll_bar` it's just a custom name
 // Create and attach ScrollView.
 // `scroller` it's just a custom name, but in WebComponent it's predefined.
-$scrollView.scroller = new ScrollView($scrollView, options);
+$scrollView.scroller = new RADJS_ScrollView($scrollView, options);
 // Create and attach custom pointer events, because of: IE support, SVG elements etc.
 // `tracker` is also custom name but it's also predefined in WebComponent
-$scrollView.tracker = new ScrollView.PointerWrapper($scrollView, $scrollView.scroller);
+$scrollView.tracker = new PointerTracker($scrollView, $scrollView.scroller);
 ```
 
 See for more advanced usage in examples folder.
 
 ## API
 
-### `ScrollView` creating options.
+### `Scroll View` creating options.
 
 ##### preventMove
 
@@ -181,7 +191,7 @@ options.onFlingBefore = function (event) {
 **constructor**
 
 ```javascript
-var preserve = new ScrollView(document.getElementById("scroll"), {direction: "vertical"});
+var preserve = new RADJS_ScrollView(document.getElementById("scroll"), {direction: "vertical"});
 ```
 
 **preventDefaultTags**
@@ -204,11 +214,11 @@ $scrollView.easeFunc = function (microtime) {
 
 **destroy**
 
-Detach `ScrollView` from HTML element.
+Detach `Scroll View` from HTML element.
 
 ```javascript
 var $scroll = document.getElementById("scroll");
-$scroll.scroller = new ScrollView($scroll, {direction: "vertical"});
+$scroll.scroller = new RADJS_ScrollView($scroll, {direction: "vertical"});
 // ...
 $scroll.scroller.destroy();
 ```
@@ -219,7 +229,7 @@ Refresh scrollable content inside ScrollView.
 
 ```javascript
 var $scroll = document.getElementById("scroll");
-$scroll.scroller = new ScrollView($scroll, {direction: "vertical"});
+$scroll.scroller = new RADJS_ScrollView($scroll, {direction: "vertical"});
 // ...
 $scroll.scroller.refresh();
 ```
@@ -230,7 +240,7 @@ Smooth content scroll to specified position for a specified time. You have to pa
 
 ```javascript
 var $scroll = document.getElementById("scroll");
-$scroll.scroller = new ScrollView($scroll, {direction: "vertical"});
+$scroll.scroller = new RADJS_ScrollView($scroll, {direction: "vertical"});
 $scroll.scroll(-640, 1000);
 ```
 
@@ -240,7 +250,7 @@ This method will *jump* content to position.
 
 ```javascript
 var $scroll = document.getElementById("scroll");
-$scroll.scroller = new ScrollView($scroll, {direction: "vertical"});
+$scroll.scroller = new RADJS_ScrollView($scroll, {direction: "vertical"});
 $scroll.jumpTo(640);
 ```
 
@@ -250,7 +260,7 @@ Handle event by `ScrollView`.
 
 ```javascript
 var $scrollView = document.getElementById("scroll");
-$scrollView.scroller = new ScrollView($scroll, {
+$scrollView.scroller = new RADJS_ScrollView($scroll, {
 	direction: "vertical",
 	onDownBefore: function (event) {
 		 if (something_happend) {
@@ -265,14 +275,14 @@ $scrollView.scroller = new ScrollView($scroll, {
 
 ### Internal plugins
 
-### ScrollBar
+###№ ScrollBar
 
 Create custom scroll bar.
 
 ```javascript
 var $scrollView = document.getElementById("scroll-wrapper");
 var options = {};
-$scrollView.scroll_bar = new ScrollView.ScrollBar($scrollView, {
+$scrollView.scroll_bar = new RADJS_ScrollView.ScrollBar($scrollView, {
 	className: "bem--scroll_bar",
 	direction: "vertical"
 });
@@ -284,20 +294,27 @@ options.onScroll = function (shift, position) {
 		 $scrollView.onScroll(arguments);
 	}
 };
-$scrollView.scroller = new ScrollView($scrollView, options);
+$scrollView.scroller = new RADJS_ScrollView($scrollView, options);
 ```
 
-### PointerWrapper
+### Additional modules
 
-Provide point events for DOM elements.
+### Pointer tracker and gesture tracker
+
+Provides point and gesture events for DOM elements. Can be replaced by any other library or completely removed if browser supports them.
+
+`PointerTracker` provides polyfill for pointerup, pointerdown, pointermove, pointerover, pointerenter, pointerout, pointerleave, pointercancel.
+
+`GestureTracker` provides polyfill for tap, longtap, doubletap, hold, fling.
 
 ```javascript
 var $scrollView = document.getElementById("scroll-wrapper");
-$scrollView.scroller = new ScrollView($scrollView, {});
-$scrollView.tracker = new ScrollView.PointerWrapper($scrollView, $scrollView.scroller);
+$scrollView.scroller = new RADJS_ScrollView($scrollView, {});
+$scrollView.pointer = new PointerTracker($scrollView);
+$scrollView.gesture = new GestureTracker($scrollView);
 $scrollView.destroy = function () {
 	$scrollView.scroller.destroy();
-	$scrollView.tracker.destroy();
+	$scrollView.pointer.destroy();
+	$scrollView.gesture.destroy();
 };
 ```
-

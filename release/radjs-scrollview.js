@@ -317,7 +317,8 @@ var ScrollView = (function () {
 				case this._STRINGS.fling:
 					// Setup shift value & decrease velocity
 					this._shift = this._animParams.velocity * (now - this._animParams.lastTime);
-					this._tmp.velocity = this._animParams.velocity + this._animParams.a * (now - this._animParams.startTime);
+					this._tmp.velocity =
+						this._animParams.velocity + this._animParams.a * (now - this._animParams.startTime);
 					// Check changing of velocity sign
 					if (this._tmp.velocity / this._animParams.velocity > 0) {
 						this._animParams.velocity = this._tmp.velocity;
@@ -325,7 +326,7 @@ var ScrollView = (function () {
 						if (((this._pos < this._min) && (this._animParams.velocity > 0)) ||
 							((this._pos > this._max) && (this._animParams.velocity < 0))) {
 							this._animParams.velocity += -this._animParams.velocity * 0.6;
-							if (Math.abs(this._shift) < 0.1) {
+							if (Math.abs(this._shift) < 0.05) {
 								this._motionType = this._STRINGS.checkTweak;
 							}
 						}
@@ -335,9 +336,9 @@ var ScrollView = (function () {
 					break;
 				case this._STRINGS.tweak:
 				case this._STRINGS.scroll:
-					this._tmp.now = Math.ceil(1000 * (now - this._animParams.startTime) / this._animParams.duration) / 1000;
+					this._tmp.now = Math.ceil(1e3 * (now - this._animParams.startTime) / this._animParams.duration) / 1e3;
 					this._tmp.easing = this.easeFunc(this._tmp.now);
-					this._tmp.shift = Math.ceil(1000 * this._animParams.shift * this._tmp.easing) / 1000;
+					this._tmp.shift = Math.ceil(1e3 * this._animParams.shift * this._tmp.easing) / 1e3;
 					if (this._animParams.duration !== 0) {
 						this._shift = this._tmp.shift - this._animParams.lastShift;
 					} else {
@@ -366,7 +367,8 @@ var ScrollView = (function () {
 					}
 					if (this._options.tweak && this._tmp.shift === 0) {
 						if (this._pos < this._max && this._pos > this._min) {
-							this._tmp.shift = this._pos - Math.ceil(1000 * Math.round(this._pos / this._options.tweak) * this._options.tweak) / 1000;
+							this._tmp.shift = this._pos -
+								Math.ceil(1e3 * Math.round(this._pos / this._options.tweak) * this._options.tweak) / 1e3;
 							this._tmp.shift = -this._tmp.shift;
 						}
 					}
@@ -405,13 +407,13 @@ var ScrollView = (function () {
 			this._eventPointerMove(event);
 		},
 		_eventFling: function (event) {
-			var V = this._options.scroll ? -event[this._speedName] : 0;
-			if (V === 0) {
+			var velocity = this._options.scroll ? -event[this._speedName] : 0;
+			if (velocity === 0) {
 				return;
 			}
 			this._animParams = {
-				velocity: V,
-				a: -(V < 0 ? -1 : 1) * 0.00009,
+				velocity: velocity,
+				a: -(velocity < 0 ? -1 : 1) * 0.00009,
 				startTime: null,
 				lastTime: null
 			};

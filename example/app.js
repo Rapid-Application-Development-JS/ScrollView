@@ -153,7 +153,16 @@ define("app", function () {
 		}
 
 		var rect = extractRect($scrollView);
-		var feelPercent = 25; // Scroll bar in right area starts to respond to touch after this percent
+		var feelPercent = 20; // Scroll bar in right area starts to respond to touch after this percent
+		$scrollView.appendChild($("<div>").css({
+			backgroundColor: "rgba(0, 0, 0, .03)",
+			bottom: 0,
+			cursor: "ns-resize",
+			position: "absolute",
+			right: 0,
+			top: 0,
+			width: feelPercent + "%"
+		}).get(0)); // Shady layer showing the user scroll border, can be removed
 		var scrollPosition = "right";
 		/**
 		 * Is pointer in scrollbar area

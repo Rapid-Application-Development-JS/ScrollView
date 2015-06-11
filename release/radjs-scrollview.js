@@ -1,19 +1,16 @@
 (function (root, factory) {
 	if (typeof define === "function" && define.amd) {
-		define("radjs-scrollview", ["radjs-pointer", "radjs-gesture"], function (RADJS_Pointer, RADJS_Gesture) {
-			root.RADJS_ScrollView = factory(RADJS_Pointer, RADJS_Gesture);
+		define("radjs-scrollview", function () {
+			root.RADJS_ScrollView = factory();
 			return root.RADJS_ScrollView;
 		});
 	} else if (typeof module === "object" && module.exports) {
-		root.RADJS_ScrollView = factory(require("radjs-pointer"), require("radjs-gesture"));
+		root.RADJS_ScrollView = factory();
 		module.exports = root.RADJS_ScrollView;
 	} else {
-		root.RADJS_ScrollView = factory(
-			root.PointerTracker || root.RADJS_Pointer,
-			root.GestureTracker || root.RADJS_Gesture
-		);
+		root.RADJS_ScrollView = factory();
 	}
-}(this, function (RADJS_Pointer, RADJS_Gesture) {
+}(this, function () {
 	"use strict";
 
 /**

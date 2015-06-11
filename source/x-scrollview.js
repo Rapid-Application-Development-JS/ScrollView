@@ -1,15 +1,17 @@
 (function (root, factory) {
 	if (typeof define === "function" && define.amd) {
-		define("x-radjs-scrollview", [
-				"radjs-scrollview", "radjs-pointer", "radjs-gesture"
-			], function (RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture) {
+		define("x-radjs-scrollview"
+			, ["radjs-scrollview", "radjs-pointer", "radjs-gesture", "webcomponentsjs"]
+			, function (RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture) {
 				return factory(RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture);
 			}
 		);
 	} else if (typeof module === "object" && module.exports) {
-		module.exports = factory(require("radjs-scrollview"), require("radjs-pointer"), require("radjs-gesture"));
+		module.exports = factory(
+			require("radjs-scrollview"), require("radjs-pointer"), require("radjs-gesture"), require("webcomponentsjs")
+		);
 	} else {
-		factory(root.RADJS_ScrollView, root.PointerTracker, root.GestureTracker);
+		factory(root.PointerTracker || root.RADJS_Pointer, root.GestureTracker || root.RADJS_Gesture);
 	}
 }(this, function (RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture) {
 	"use strict";
@@ -121,9 +123,9 @@
 			}
 		}, options);
 		this.scroller = new RADJS_ScrollView(this, options);
-		this._pointer = new RADJS_Pointer(this);
-		this._pointer.setMoveHoverState(false);
-		this._gesture = new RADJS_Gesture(this);
+		this.pointer = new RADJS_Pointer(this);
+		this.pointer.setMoveHoverState(false);
+		this.gesture = new RADJS_Gesture(this);
 		refreshMthd = this.scroller.refresh;
 		this.scroller.refresh = function () {
 			refreshMthd.apply(element.scroller, arguments);
@@ -140,7 +142,8 @@
 		};
 		this.destroy = function () {
 			this.scroller.destroy();
-			this.tracker.destroy();
+			this.pointer.destroy();
+			this.gesture.destroy();
 		};
 	};
 	proto.attachedCallback = function () {

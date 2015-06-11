@@ -7,13 +7,11 @@ require.config({
 		, "radjs-pointer": "bower_components/radjs-pointer/release/pointer.min"
 		, "radjs-gesture": "bower_components/radjs-gesture/release/gesture.min"
 		, "radjs-scrollview": "bower_components/radjs-scrollview/release/radjs-scrollview.min"
-		, "webcomponents": "bower_components/webcomponentsjs/webcomponents-lite.min"
+		, "webcomponentsjs": "bower_components/webcomponentsjs/webcomponents-lite.min"
 		, "x-radjs-scrollview": "bower_components/radjs-scrollview/release/x-radjs-scrollview.min"
 	},
 	"shim": {
-		"app": {"deps": ["core-js", "jquery", "radjs-scrollview"]}
-		, "radjs-gesture": {"deps": ["radjs-pointer"]}
-		, "x-radjs-scrollview": {"deps": ["webcomponents"]}
+		"app": {"deps": ["core-js", "jquery", "x-radjs-scrollview"]}
 	},
 	"waitSeconds": 0
 });

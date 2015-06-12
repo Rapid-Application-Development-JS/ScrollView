@@ -128,7 +128,8 @@ var ScrollView = (function () {
 			move: "pointermove",
 			down: "pointerdown",
 			chancel: "pointercancel",
-			fling: "fling"
+			fling: "fling",
+			leave: "pointerleave"
 		},
 		_STRINGS: {
 			tweak: "tweak",
@@ -149,6 +150,7 @@ var ScrollView = (function () {
 			// Check different types of motion
 			switch (this._motionType) {
 				case this._STRINGS.move:
+					console.info("move");
 					this._shift /= ((this._pos < this._min) || (this._pos > this._max)) ? 3 : 1;
 					break;
 				case this._STRINGS.fling:
@@ -360,79 +362,75 @@ var ScrollView = (function () {
 			}
 		},
 		handleEvent: function (event, ignoreBeforeAfter) {
-			var self = this;
+			var that = this;
+			function aspectBeforeAfter(fnOnName) {
+				return typeof that._options[fnOnName] === "function" && (!ignoreBeforeAfter);
+			} // if in options named function is defined and should not be ignored by `ignoreBeforeAfter`
+			function disallowFire(fnOnName) {
+				return that._options[fnOnName](event) === false;
+			} // function with this event return false, and event should be prevented
+			function preventBefore (fnOnName) {
+				return aspectBeforeAfter(fnOnName) && disallowFire(fnOnName);
+			}
+			function callAfter(fnOnName) {
+				if (aspectBeforeAfter(fnOnName)) {
+					that._options[fnOnName](event);
+				}
+			}
 			switch (event.type) {
 				case this.TRACKING_EVENTS.down:
-					if ((typeof this._options["onDownBefore"] === "function") && (!ignoreBeforeAfter)) {
-						if (this._options["onDownBefore"](event) === false) {
-							return;
-						}
+					if (preventBefore("onDownBefore")) {
+						return;
 					}
 					this._eventPointerDown(event);
-					if ((typeof this._options["onDownAfter"] === "function") && (!ignoreBeforeAfter)) {
-						this._options["onDownAfter"](event);
-					}
+					callAfter("onDownAfter");
 					break;
 				case this.TRACKING_EVENTS.move:
-					if ((typeof this._options["onMoveBefore"] === "function") && (!ignoreBeforeAfter)) {
-						if (this._options["onMoveBefore"](event) === false) {
-							return;
-						}
+					if (preventBefore("onMoveBefore")) {
+						return;
 					}
 					this._eventPointerMove(event);
 					if (this._options.preventMove && !this.preventDefaultTags.test(event.target)) {
 						event.preventDefault();
 					}
-					if ((typeof this._options["onMoveAfter"] === "function") && (!ignoreBeforeAfter)) {
-						this._options["onMoveAfter"](event);
-					}
+					callAfter("onMoveAfter");
 					break;
 				case this.TRACKING_EVENTS.cancel:
-					if ((typeof this._options["onCancelBefore"] === "function") && (!ignoreBeforeAfter)) {
-						if (this._options["onCancelBefore"](event) === false) {
-							return;
-						}
+					if (preventBefore("onCancelBefore")) {
+						return;
 					}
 					this._eventPointerUp(event);
-					if ((typeof this._options["onCancelAfter"] === "function") && (!ignoreBeforeAfter)) {
-						this._options["onCancelAfter"](event);
-					}
+					callAfter("onCancelAfter");
 					break;
 				case this.TRACKING_EVENTS.up:
-					if ((typeof this._options["onUpBefore"] === "function") && (!ignoreBeforeAfter)) {
-						if (this._options["onUpBefore"](event) === false) {
-							return;
-						}
+					if (preventBefore("onUpBefore")) {
+						return;
 					}
 					this._eventPointerUp(event);
-					if ((typeof this._options["onUpAfter"] === "function") && (!ignoreBeforeAfter)) {
-						this._options["onUpAfter"](event);
+					callAfter("onUpAfter");
+					break;
+				case this.TRACKING_EVENTS.leave:
+					if (preventBefore("onLeaveBefore")) {
+						return;
 					}
+					this._eventPointerUp(event);
+					callAfter("onLeaveAfter");
 					break;
 				case this.TRACKING_EVENTS.fling:
-					if ((typeof this._options["onFlingBefore"] === "function") && (!ignoreBeforeAfter)) {
-						if (this._options["onFlingBefore"](event) === false) {
-							return;
-						}
+					if (preventBefore("onFlingBefore")) {
+						return;
 					}
 					this._eventFling(event);
-					if ((typeof this._options["onFlingAfter"] === "function") && (!ignoreBeforeAfter)) {
-						this._options["onFlingAfter"](event);
-					}
+					callAfter("onFlingAfter");
 					break;
 				case this.TRACKING_EVENTS.resize:
-					if ((typeof this._options["onResizeBefore"] === "function") && (!ignoreBeforeAfter)) {
-						if (this._options["onResizeBefore"](event) === false) {
-							return;
-						}
+					if (preventBefore("onResizeBefore")) {
+						return;
 					}
 					clearTimeout(this._resizeID);
-					var that = this;
 					this._resizeID = setTimeout(function () {
-						self.refresh();
-						if ((typeof that._options["onResizeAfter"] === "function") && (!ignoreBeforeAfter)) {
-							that._options["onResizeAfter"](event);
-						}
+						that.refresh();
+						callAfter("onResizeAfter");
 					}, 250);
 					break;
 			}

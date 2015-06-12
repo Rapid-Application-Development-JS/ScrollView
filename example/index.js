@@ -7,6 +7,7 @@ require.config({
 		, "radjs-pointer": "bower_components/radjs-pointer/release/pointer.min"
 		, "radjs-gesture": "bower_components/radjs-gesture/release/gesture.min"
 		, "radjs-scrollview": "bower_components/radjs-scrollview/release/radjs-scrollview.min"
+		//, "radjs-scrollview": "../release/radjs-scrollview"
 		, "webcomponentsjs": "bower_components/webcomponentsjs/webcomponents-lite.min"
 		, "x-radjs-scrollview": "bower_components/radjs-scrollview/release/x-radjs-scrollview.min"
 	},

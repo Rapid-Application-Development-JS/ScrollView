@@ -1,4 +1,11 @@
 define("app", function () {
+	window.watch = function (obj) {
+		Object.observe(obj, function(changes){
+			changes.forEach(function(change) {
+				console.warn(change.type, change.name, change.oldValue);
+			});
+		});
+	};
 	var app = {};
 	app.modules = {};
 	app.data = {};

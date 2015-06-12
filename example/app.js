@@ -1,11 +1,41 @@
 define("app", function () {
-	window.watch = function (obj) {
-		Object.observe(obj, function(changes){
-			changes.forEach(function(change) {
-				console.warn(change.type, change.name, change.oldValue);
+	// This is for debug only
+	function Watchman(object) {
+		var that = this;
+		this._watchable = object;
+		Object.observe(this._watchable, function (changes) {
+			changes.forEach(function (change) {
+				if (change.type in that._events === false) {
+					return;
+				}
+				if (change.name in that._events[change.type] === false) {
+					return;
+				}
+				if (typeof that._events[change.type][change.name] !== "function") {
+					return;
+				}
+				that._events[change.type][change.name](change.type, change.name, change.oldValue);
 			});
 		});
+	}
+	Watchman.prototype = {
+		_watchable: {},
+		_events: {},
+		destroy: function () {
+			Object.unobserve(this._watchable);
+			this._watchable = {};
+		},
+		subscribe: function (type, name, callback) {
+			this._events[type] || (this._events[type] = {});
+			this._events[type][name] = callback;
+		},
+		unsubscribe: function (type, name) {
+			if (type in this._events && this._events[type][name]) {
+				delete this._events[type][name];
+			}
+		}
 	};
+	//
 	var app = {};
 	app.modules = {};
 	app.data = {};
@@ -54,7 +84,7 @@ define("app", function () {
 			$bookmark.fadeOut(); // Fast scroll bookmark fadeout when scrolling stopped
 			setTimeout(function () {
 				$bookmark.hide();
-			}, 450);
+			}, 2000);
 		}
 
 		function bookmarkShow() {
@@ -194,6 +224,9 @@ define("app", function () {
 			return false; // prevent default action
 		};
 		scroller._options.onMoveBefore = function (event) {
+			if (!$scrollView.pointer.isDown) {
+				return;
+			}// pointer not `pushed` or leave elemnet and back `pushed` but still funciton need to be ended
 			if (!isInScrollBarArea(event.clientX, event.clientY)) {
 				return;
 			}
@@ -214,6 +247,12 @@ define("app", function () {
 		};
 		scroller._options.onFlingBefore = function (event) {
 			return isInScrollBarArea(event.clientX, event.clientY) === false; // prevent default action if needed
+		};
+		scroller._options.onFlingBefore = function (event) {
+			return isInScrollBarArea(event.clientX, event.clientY) === false; // prevent default action if needed
+		};
+		scroller._options.onCancelAfter = scroller._options.onUpAfter = scroller._options.onLeaveAfter = function () {
+			bookmarkHide();
 		};
 	};
 	app._initScrollHorizontal = function () {

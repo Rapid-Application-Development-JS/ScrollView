@@ -150,7 +150,6 @@ var ScrollView = (function () {
 			// Check different types of motion
 			switch (this._motionType) {
 				case this._STRINGS.move:
-					console.info("move");
 					this._shift /= ((this._pos < this._min) || (this._pos > this._max)) ? 3 : 1;
 					break;
 				case this._STRINGS.fling:
@@ -352,6 +351,10 @@ var ScrollView = (function () {
 						position = parseInt(position);
 						this._wrapper.style[this._transformName] = "translate3d(" + position + "px, 0, 0)";
 					}
+					this._pos = position + this._shift;
+					this._shift = 0;
+					this._lastPointerPosition = event[this._coordName];
+					this._motionType = this._STRINGS.checkTweak;
 					break;
 				case 1: //percent
 					// @todo implement

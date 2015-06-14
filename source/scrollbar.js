@@ -7,7 +7,8 @@
 function ScrollBar(container, options) {
 	options = mix({
 		className: "scrollbar",
-		direction: "vertical"
+		direction: "vertical",
+		smart: null
 	}, options);
 	this.direction = options.direction;
 	this._container = container;
@@ -20,6 +21,13 @@ function ScrollBar(container, options) {
 	this._position = 0;
 	this._max = 0;
 	this._translateArray = this.direction === "vertical" ? ["translate3d(0, ", 0, "px, 0)"] : ["translate3d(", 0, "px, 0, 0)"];
+	if (options.smart instanceof Element) {
+		this._smart = new ElementSizeWatch(container, options.smart, options.direction, function () {
+			this._bar.setAttribute("hidden", "hidden");
+		}.bind(this), function () {
+			this._bar.removeAttribute("hidden");
+		}.bind(this), 1000);
+	}
 }
 ScrollBar.prototype = {
 	/**
@@ -66,5 +74,10 @@ ScrollBar.prototype = {
 		setTimeout(function () {
 			bar._bar.style[bar._transitionName] = "transform 0ms";
 		}, 350);
+	},
+	destroy: function () {
+		if (this._smart) {
+			this._smart.destroy();
+		}
 	}
 };

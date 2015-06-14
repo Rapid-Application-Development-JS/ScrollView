@@ -127,7 +127,8 @@ define("app", function () {
 		// Create custom scroll bar
 		$scrollView.scrollBar = new app.modules["radjs-scrollview"].ScrollBar($scrollView, {
 			className: options.scrollbar,
-			direction: options.direction || "vertical"
+			direction: options.direction || "vertical",
+			smart: $scrollContent // Accepts content to watched for size changes and hides scrollbar if content fits
 		});
 		$scrollView.scroller = new app.modules["radjs-scrollview"]($scrollView, options); // Create and attach view
 		// Create and attach custom pointer events, because of: IE < 11 support, SVG elements, and links bugs
@@ -163,6 +164,7 @@ define("app", function () {
 			$scrollView.scroller.destroy();
 			$scrollView.pointer.destroy();
 			$scrollView.gesture.destroy();
+			$scrollView.scrollBar.destroy();
 		};
 		// Add content
 		var $ul = $($scrollContent).find("ul");

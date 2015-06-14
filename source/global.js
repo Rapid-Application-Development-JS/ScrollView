@@ -37,3 +37,50 @@ function mix(old, newMixin) {
 	}
 	return old;
 }
+
+function ElementSizeWatch($wrapper, $content, direction, onFit, onScroll, interval) {
+	var wrapperHeight = $wrapper.clientHeight;
+	var wrapperWidth = $wrapper.clientWidth;
+	var contentHeight = $content.scrollHeight;
+	var contentWidth = $content.scrollWidth;
+	var timerID = null;
+	setInterval(function () {
+		if (direction === "horizontal") {
+			if ($wrapper.clientWidth != wrapperWidth || $content.scrollWidth != contentWidth) {
+				wrapperWidth = $wrapper.clientWidth;
+				contentWidth = $content.scrollWidth;
+				if (wrapperWidth >= contentWidth) {
+					onFit();
+				} else {
+					onScroll();
+				}
+			}
+		} else if (direction === "vertical") {
+			if ($wrapper.clientHeight != wrapperHeight || $content.scrollHeight != contentHeight) {
+				wrapperHeight = $wrapper.clientHeight;
+				contentHeight = $content.scrollHeight;
+				if (wrapperHeight >= contentHeight) {
+					onFit();
+				} else {
+					onScroll();
+				}
+			}
+		} else {
+			if ($wrapper.clientWidth != wrapperWidth || $content.scrollWidth != contentWidth
+				|| $wrapper.clientHeight != wrapperHeight || $content.scrollHeight != contentHeight) {
+				wrapperWidth = $wrapper.clientWidth;
+				contentWidth = $content.scrollWidth;
+				wrapperHeight = $wrapper.clientHeight;
+				contentHeight = $content.scrollHeight;
+				if (wrapperWidth >= contentWidth && wrapperHeight >= contentHeight) {
+					onFit();
+				} else {
+					onScroll();
+				}
+			}
+		}
+	}, interval);
+	this.destroy = function () {
+		clearInterval(timerID);
+	};
+}

@@ -53,6 +53,53 @@ function mix(old, newMixin) {
 	return old;
 }
 
+function ElementSizeWatch($wrapper, $content, direction, onFit, onScroll, interval) {
+	var wrapperHeight = $wrapper.clientHeight;
+	var wrapperWidth = $wrapper.clientWidth;
+	var contentHeight = $content.scrollHeight;
+	var contentWidth = $content.scrollWidth;
+	var timerID = null;
+	setInterval(function () {
+		if (direction === "horizontal") {
+			if ($wrapper.clientWidth != wrapperWidth || $content.scrollWidth != contentWidth) {
+				wrapperWidth = $wrapper.clientWidth;
+				contentWidth = $content.scrollWidth;
+				if (wrapperWidth >= contentWidth) {
+					onFit();
+				} else {
+					onScroll();
+				}
+			}
+		} else if (direction === "vertical") {
+			if ($wrapper.clientHeight != wrapperHeight || $content.scrollHeight != contentHeight) {
+				wrapperHeight = $wrapper.clientHeight;
+				contentHeight = $content.scrollHeight;
+				if (wrapperHeight >= contentHeight) {
+					onFit();
+				} else {
+					onScroll();
+				}
+			}
+		} else {
+			if ($wrapper.clientWidth != wrapperWidth || $content.scrollWidth != contentWidth
+				|| $wrapper.clientHeight != wrapperHeight || $content.scrollHeight != contentHeight) {
+				wrapperWidth = $wrapper.clientWidth;
+				contentWidth = $content.scrollWidth;
+				wrapperHeight = $wrapper.clientHeight;
+				contentHeight = $content.scrollHeight;
+				if (wrapperWidth >= contentWidth && wrapperHeight >= contentHeight) {
+					onFit();
+				} else {
+					onScroll();
+				}
+			}
+		}
+	}, interval);
+	this.destroy = function () {
+		clearInterval(timerID);
+	};
+}
+
 (function (_window) {
 	_window.Date.now || (_window.Date.now = function () {
 		return +new Date;
@@ -99,7 +146,8 @@ function mix(old, newMixin) {
 function ScrollBar(container, options) {
 	options = mix({
 		className: "scrollbar",
-		direction: "vertical"
+		direction: "vertical",
+		smart: null
 	}, options);
 	this.direction = options.direction;
 	this._container = container;
@@ -112,6 +160,13 @@ function ScrollBar(container, options) {
 	this._position = 0;
 	this._max = 0;
 	this._translateArray = this.direction === "vertical" ? ["translate3d(0, ", 0, "px, 0)"] : ["translate3d(", 0, "px, 0, 0)"];
+	if (options.smart instanceof Element) {
+		this._smart = new ElementSizeWatch(container, options.smart, options.direction, function () {
+			this._bar.setAttribute("hidden", "hidden");
+		}.bind(this), function () {
+			this._bar.removeAttribute("hidden");
+		}.bind(this), 1000);
+	}
 }
 ScrollBar.prototype = {
 	/**
@@ -158,6 +213,11 @@ ScrollBar.prototype = {
 		setTimeout(function () {
 			bar._bar.style[bar._transitionName] = "transform 0ms";
 		}, 350);
+	},
+	destroy: function () {
+		if (this._smart) {
+			this._smart.destroy();
+		}
 	}
 };
 

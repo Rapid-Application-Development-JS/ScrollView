@@ -10,6 +10,7 @@ require.config({
 		//, "radjs-scrollview": "../release/radjs-scrollview"
 		, "webcomponentsjs": "bower_components/webcomponentsjs/webcomponents-lite.min"
 		, "x-radjs-scrollview": "bower_components/radjs-scrollview/release/x-radjs-scrollview.min"
+		//, "x-radjs-scrollview": "../release/x-radjs-scrollview.min"
 	},
 	"shim": {
 		"app": {"deps": ["core-js", "jquery", "x-radjs-scrollview"]}

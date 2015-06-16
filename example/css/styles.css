@@ -79,9 +79,6 @@ code {
   -ms-user-select: none;
   user-select: none;
 }
-.scroll-horizontal .scroll-content {
-  min-width: 120%;
-}
 #scroll-horizontal table {
   margin-top: 32px;
 }
@@ -257,4 +254,8 @@ code {
 }
 h1, h2, h3, h4, h5, h6 {
   width: 90%;
+}
+a, a:visited {
+  color: white;
+  border-bottom: 1px solid white;
 }

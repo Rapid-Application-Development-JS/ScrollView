@@ -37,50 +37,73 @@ function mix(old, newMixin) {
 	}
 	return old;
 }
-
 function ElementSizeWatch($wrapper, $content, direction, onFit, onScroll, interval) {
-	var wrapperHeight = $wrapper.clientHeight;
-	var wrapperWidth = $wrapper.clientWidth;
-	var contentHeight = $content.scrollHeight;
-	var contentWidth = $content.scrollWidth;
-	var timerID = null;
+	this._root = $wrapper;
+	this._inner = $content;
+	this._root_h = $wrapper.clientHeight;
+	this._root_w = $wrapper.clientWidth;
+	this._inner_h = $content.scrollHeight;
+	this._inner_w = $content.scrollWidth;
+	this._direction = direction;
+	this._onFit = onFit;
+	this._onScroll = onScroll;
+	var that = this;
 	setInterval(function () {
-		if (direction === "horizontal") {
-			if ($wrapper.clientWidth != wrapperWidth || $content.scrollWidth != contentWidth) {
-				wrapperWidth = $wrapper.clientWidth;
-				contentWidth = $content.scrollWidth;
-				if (wrapperWidth >= contentWidth) {
-					onFit();
-				} else {
-					onScroll();
-				}
-			}
-		} else if (direction === "vertical") {
-			if ($wrapper.clientHeight != wrapperHeight || $content.scrollHeight != contentHeight) {
-				wrapperHeight = $wrapper.clientHeight;
-				contentHeight = $content.scrollHeight;
-				if (wrapperHeight >= contentHeight) {
-					onFit();
-				} else {
-					onScroll();
-				}
-			}
-		} else {
-			if ($wrapper.clientWidth != wrapperWidth || $content.scrollWidth != contentWidth
-				|| $wrapper.clientHeight != wrapperHeight || $content.scrollHeight != contentHeight) {
-				wrapperWidth = $wrapper.clientWidth;
-				contentWidth = $content.scrollWidth;
-				wrapperHeight = $wrapper.clientHeight;
-				contentHeight = $content.scrollHeight;
-				if (wrapperWidth >= contentWidth && wrapperHeight >= contentHeight) {
-					onFit();
-				} else {
-					onScroll();
-				}
-			}
-		}
+		that._tick();
 	}, interval);
-	this.destroy = function () {
-		clearInterval(timerID);
-	};
 }
+ElementSizeWatch.prototype = {
+	_root: null,
+	_inner: null,
+	_direction: null,
+	_timerID: null,
+	_root_h: 0,
+	_root_w: 0,
+	_inner_h: 0,
+	_inner_w: 0,
+	_onFit: null,
+	_onScroll: null,
+	_tick: function () {
+		switch (this._direction) {
+			case "horizontal":
+				if (this._root.clientWidth != this._root_w || this._inner.scrollWidth != this._inner_w) {
+					this._root_w = this._root.clientWidth;
+					this._inner_w = this._inner.scrollWidth;
+					if (this._root_w >= this._inner_w) {
+						this._onFit();
+					} else {
+						this._onScroll();
+					}
+				}
+				break;
+			case "vertical":
+				if (this._root.clientHeight != this._root_h || this._inner.scrollHeight != this._inner_h) {
+					this._root_h = this._root.clientHeight;
+					this._inner_h = this._inner.scrollHeight;
+					if (this._root_h >= this._inner_h) {
+						this._onFit();
+					} else {
+						this._onScroll();
+					}
+				}
+				break;
+			default:
+				if (this._root.clientWidth != this._root_w || this._inner.scrollWidth != this._inner_w
+					|| this._root.clientHeight != this._root_h || this._inner.scrollHeight != this._inner_h) {
+					this._root_w = this._root.clientWidth;
+					this._inner_w = this._inner.scrollWidth;
+					this._root_h = this._root.clientHeight;
+					this._inner_h = this._inner.scrollHeight;
+					if (this._root_w >= this._inner_w && this._root_h >= this._inner_h) {
+						this._onFit();
+					} else {
+						this._onScroll();
+					}
+				}
+				break;
+		}
+	},
+	destroy: function () {
+		clearInterval(this._timerID);
+	}
+};

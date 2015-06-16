@@ -94,10 +94,21 @@
 		}
 		this.isInited = true;
 		if (options.scrollbar) {
+			if (!options.smart || !options.smart.length) {
+				options.smart = this.querySelector('[data-role="content"]');
+			} else {
+				try {
+					options.smart = this.querySelector(options.smart);
+				} catch (error) {
+					console.error(error);
+				}
+			}
 			this.scrollBar = new RADJS_ScrollView.ScrollBar(this, {
 				className: options.scrollbar,
-				direction: options.direction || "vertical"
+				direction: options.direction || "vertical",
+				smart: options.smart
 			});
+			delete options.smart;
 		}
 		options = mix({
 			// Decorate onScroll methods
@@ -144,6 +155,7 @@
 			this.scroller.destroy();
 			this.pointer.destroy();
 			this.gesture.destroy();
+			this.scrollBar && this.scrollBar.destroy && this.scrollBar.destroy();
 		};
 	};
 	proto.attachedCallback = function () {

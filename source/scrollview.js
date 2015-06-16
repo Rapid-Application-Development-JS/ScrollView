@@ -18,7 +18,7 @@ var ScrollView = (function () {
 			marginMAX: 0,
 			onScroll: function (shift) {
 			},
-			onScrollBefore: function (shift) {
+			onScrollBefore: function () {
 				return true;
 			},
 			onScrollAfter: function () {
@@ -122,6 +122,7 @@ var ScrollView = (function () {
 	}
 
 	ScrollView.prototype = {
+		version: "1.0.3",
 		TRACKING_EVENTS: {
 			resize: "resize",
 			up: "pointerup",
@@ -440,6 +441,7 @@ var ScrollView = (function () {
 		}
 	};
 	ScrollView.ScrollBar = ScrollBar;
+	ScrollView.ElementSizeWatch = ElementSizeWatch;
 	return ScrollView;
 }());
 

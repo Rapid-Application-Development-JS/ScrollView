@@ -69,9 +69,10 @@ Options for webcomponent are taken from `options` attribute.
 **Note:** You can freely add `is` attribute after document loading.
 
 ```html
-<div is="x-radjs-scrollview"
-	options="direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal;">
-	<div class="scroll-content">
+<div is="x-radjs-scrollview" options="
+	direction: horizontal; bounds: false; scrollbar: scrollbar-horizontal; smart: #scroll-content
+">
+	<div class="scroll-content" data-role="content">
 		 <ul>
 				<li>Very long list</li>
 		 </ul>
@@ -79,15 +80,37 @@ Options for webcomponent are taken from `options` attribute.
 </div>
 ```
 
+Attribute `options` will be parsed for configuration of element. If want smart scrollbar that will appear only if content is bigger than wrapper, you need to add to inner element `data-role="content"` or define query selector in options like this `smart: #scroll-content"`.
+
 ## Usage as library
 
 Very simple usage, just to scrollable content.
 
 ```javascript
-new RADJS_ScrollView(document.getElementById("scroll"), {direction: "vertical"});
+new RADJS_ScrollView(document.getElementById("scroll"), {
+	direction: "vertical"
+});
 ```
 
-Full usage:
+A little bit more advanced example.
+
+```javascript
+new RADJS_ScrollView(document.getElementById("scroll"), {
+	bounds: false,
+	direction: "vertical",
+	marginMAX: 0,
+	marginMIN: 0,
+	onScroll: null,
+	onScrollAfter: null,
+	onScrollBefore: function (shift) { return true; },
+	onScrollTypeChange: null
+	preventMove: true,
+	resizeEvent: true,
+	scroll: true,
+});
+```
+
+Scrollbar usage:
 
 ```javascript
  // Content to be scrolled
@@ -100,7 +123,8 @@ var options = {
 };
 $scrollView.scroll_bar = new RADJS_ScrollView.ScrollBar($scrollView, {
 	className: options.scrollbar,
-	direction: options.direction
+	direction: options.direction,
+	smart: $scrollContent.querySelector("div.list_of_something")
 }); // `scroll_bar` it's just a custom name
 // Create and attach ScrollView.
 // `scroller` it's just a custom name, but in WebComponent it's predefined.
@@ -114,7 +138,7 @@ See for more advanced usage in examples folder.
 
 ## API
 
-### `Scroll View` creating options.
+### Scroll View creating options.
 
 ##### preventMove
 
@@ -144,6 +168,10 @@ Number, default is zero. Minimal margin of HTML element, after refresh in exampl
 
 Number, default is zero. Maximum margin of scrollable content inside wrapper.
 
+###### smart
+
+HTML element or CSS selector for smart scrollbar this appear only if content is bigger than wrapper.
+
 ### Event functions
 
 ###### onScrollBefore (shift: number)
@@ -171,6 +199,8 @@ Function, default is empty function. Function called when scroll type changes.
 `onCancelBefore` and `onCancelAfter` - callbacks called before and after pointer cancel event.
 
 `onUpBefore` and `onUpAfter` - callbacks called before and after pointer up event.
+
+`onLeaveBefore` and `onLeaveAfter` - callback called before and after pointer leave event.
 
 `onFlingBefore` and `onFlingAfter` - callbacks called before and after fling.
 
@@ -275,7 +305,7 @@ $scrollView.scroller = new RADJS_ScrollView($scroll, {
 
 ### Internal plugins
 
-###№ ScrollBar
+#### ScrollBar
 
 Create custom scroll bar.
 

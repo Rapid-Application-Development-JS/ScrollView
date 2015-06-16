@@ -22,11 +22,11 @@ function ScrollBar(container, options) {
 	this._max = 0;
 	this._translateArray = this.direction === "vertical" ? ["translate3d(0, ", 0, "px, 0)"] : ["translate3d(", 0, "px, 0, 0)"];
 	if (options.smart instanceof Element) {
-		this._smart = new ElementSizeWatch(container, options.smart, options.direction, function () {
+		this._smart = new ScrollView.ElementSizeWatch(container, options.smart, options.direction, function () {
 			this._bar.setAttribute("hidden", "hidden");
 		}.bind(this), function () {
 			this._bar.removeAttribute("hidden");
-		}.bind(this), 1000);
+		}.bind(this), 1e3);
 	}
 }
 ScrollBar.prototype = {

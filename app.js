@@ -1,57 +1,55 @@
 define("app", function () {
 	var app = {};
 	app.modules = {};
-	app.data = {};
 	app.start = function (modules, data) {
-		app.modules = modules;
-		app.data = data;
+		app.modules = modules; // Loaded JS modules
+		(app.data_vertical = data) && (data = null); // Dummy data for vertical scroll
+		app.data_horizontal = []; // Dummy data for horizontal scroll
 		$(function () {
 			app._init();
 			app._createScrollVertical();
 			app._initScrollHorizontal();
-		});
+		}); // Wait for DOM ready
 	};
 	app._init = function () {
-		var zodiacsArr = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-			"Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-		var zodiacs = [];
-		for (var index = 0; index < 6; index += 1) {
-			zodiacs = zodiacs.concat(zodiacsArr);
-		}
-		this.zodiacs = zodiacs;
+		// Create example data for horizontal scroll
+		"Aries,Taurus,Gemini,Cancer,Leo,Virgo,Libra,Scorpio,Sagittarius,Capricorn,Aquarius,Pisces".
+			split(",").forEach(function (value, index, collection) {
+				this.data_horizontal = this.data_horizontal.concat(collection);
+			}, this);
 	};
 	app._createScrollVertical = function () {
-		var ModuleScrollView = app.modules["radjs-scrollview"]; // Scroll view constructor
-		var $scrollContent = $("#scroll-vertical").get(0); // Content to be scrolled
-		var $scrollView = $scrollContent.parentNode; // Container for the content
+		var elScrollContent = $("#scroll-vertical").get(0); // Content to be scrolled
+		var elScrollView = elScrollContent.parentNode; // Container for the content
 		var options = {};
 		options.direction = "vertical";
 		options.bounds = true;
 		options.scrollbar = "scrollbar-vertical"; // CSS class
 		var $bookmark = $("<div>").attr("id", "bookmark").addClass("bookmark"); // Create bookmark element
-		$scrollView.appendChild($bookmark.get(0));
+		elScrollView.appendChild($bookmark.get(0));
 		/**
 		 * Function that toggles letter in bookmark
 		 */
 		function bookmarkUpdate(height, position) {
-			var index = Math.round((height - position) / (height / app.data.length)); // calculate position on the data
+			// Calculate position in list
+			var index = Math.round((height - position) / (height / app.data_vertical.length));
 			if (index < 0) {
 				index = 0;
-			} else if (index + 1 > app.data.length) {
-				index = app.data.length - 1;
+			} else if (index + 1 > app.data_vertical.length) {
+				index = app.data_vertical.length - 1;
 			}
-			$bookmark.html(app.data[index][0]); // extract first letter
+			$bookmark.html(app.data_vertical[index][0]); // Extract first letter
 		}
 
 		function bookmarkHide() {
 			$bookmark.fadeOut(); // Fast scroll bookmark fadeout when scrolling stopped
 			setTimeout(function () {
 				$bookmark.hide();
-			}, 450);
+			}, 2000);
 		}
 
 		function bookmarkShow() {
-			$bookmark.css("opacity", 1).show(); // Fast Scroll effect with capital letter
+			$bookmark.css("opacity", 1).show(); // Fast Scroll effect with capital letter, make fully visible
 		}
 
 		/**
@@ -60,11 +58,11 @@ define("app", function () {
 		 */
 		options.onScrollBefore = function () {
 			bookmarkShow();
-			bookmarkUpdate($scrollContent.offsetHeight, $scrollView.scrollHeight);
+			bookmarkUpdate(elScrollContent.offsetHeight, elScrollView.scrollHeight);
 			// Call actual function
 			var result = true;
-			if (typeof $scrollView.onScrollBefore === "function") {
-				result = $scrollView.onScrollBefore(arguments);
+			if (typeof elScrollView.onScrollBefore === "function") {
+				result = elScrollView.onScrollBefore(arguments);
 			}
 			return result;
 		};
@@ -73,71 +71,75 @@ define("app", function () {
 		 */
 		options.onScrollAfter = function () {
 			bookmarkHide();
-			if (typeof $scrollView.onScrollAfter === "function") { // Call actual function
-				$scrollView.onScrollAfter(arguments);
+			if (typeof elScrollView.onScrollAfter === "function") { // Call actual function
+				elScrollView.onScrollAfter(arguments);
 			}
 		};
 		options.onScroll = function (shift, position) {
 			bookmarkShow();
-			bookmarkUpdate($scrollContent.offsetHeight, $scrollView.scrollHeight);
-			if ($scrollView.scrollBar) { // If scroll bar defined
-				$scrollView.scrollBar.setPosition(position);
+			bookmarkUpdate(elScrollContent.offsetHeight, elScrollView.scrollHeight);
+			if (elScrollView.scrollBar) { // If scroll bar defined
+				elScrollView.scrollBar.setPosition(position);
 			}
-			if (typeof $scrollView.onScroll === "function") { // Call actual function
-				$scrollView.onScroll(arguments);
+			if (typeof elScrollView.onScroll === "function") { // Call actual function
+				elScrollView.onScroll(arguments);
 			}
 		};
 		// Create custom scroll bar
-		$scrollView.scrollBar = new app.modules["radjs-scrollview"].ScrollBar($scrollView, {
+		elScrollView.scrollBar = new app.modules["radjs-scrollview"].ScrollBar(elScrollView, {
 			className: options.scrollbar,
-			direction: options.direction || "vertical"
+			direction: options.direction || "vertical",
+			smart: elScrollContent // Accepts content to watched for size changes and hides scrollbar if content fits
 		});
-		$scrollView.scroller = new app.modules["radjs-scrollview"]($scrollView, options); // Create and attach view
+		// Scroll View:
+		elScrollView.scroller = new app.modules["radjs-scrollview"](elScrollView, options); // Create and attach view
+		// Pointer Events:
 		// Create and attach custom pointer events, because of: IE < 11 support, SVG elements, and links bugs
-		$scrollView.pointer = new app.modules["radjs-pointer"]($scrollView);
-		$scrollView.pointer.setMoveHoverState(false);
+		elScrollView.pointer = new app.modules["radjs-pointer"](elScrollView);
+		elScrollView.pointer.setMoveHoverState(false);
 		// Actually pointer events currently supported almost everywhere, but buggy and not configurable
+		// Gesture Events:
 		// You can replace "radjs-pointer" with other library or even remove it
-		$scrollView.gesture = new app.modules["radjs-gesture"]($scrollView);
+		elScrollView.gesture = new app.modules["radjs-gesture"](elScrollView);
 		// At this point gesture events supported for any browser and device.
 		// You can replace it with your library that supports events like: hold, fling, longtap, tap, doubletap
-		var refreshMethod = $scrollView.scroller.refresh;
+		// Decorator fucntions:
+		var refreshMethod = elScrollView.scroller.refresh;
 		// Decorator for `refresh`
-		$scrollView.scroller.refresh = function () {
-			refreshMethod.apply($scrollView.scroller, arguments);
-			if ($scrollView && $scrollView.scrollBar) {
-				$scrollView.scrollBar.refresh(-$scrollView.scroller._min);
+		elScrollView.scroller.refresh = function () {
+			refreshMethod.apply(elScrollView.scroller, arguments);
+			if (elScrollView && elScrollView.scrollBar) {
+				elScrollView.scrollBar.refresh(-elScrollView.scroller._min);
 			}
 		};
 		// Decorate scroll methods
-		$scrollView.refresh = function () {
-			$scrollView.scroller.refresh();
+		elScrollView.refresh = function () {
+			elScrollView.scroller.refresh();
 		};
 		/**
 		 * Decorate scroll method
 		 */
-		$scrollView.scroll = function (shift, duration) {
-			$scrollView.scroller.scroll(shift, duration);
+		elScrollView.scroll = function (shift, duration) {
+			elScrollView.scroller.scroll(shift, duration);
 		};
 		/**
 		 * Decorate destroy method
 		 */
-		$scrollView.destroy = function () {
-			$scrollView.scroller.destroy();
-			$scrollView.pointer.destroy();
-			$scrollView.gesture.destroy();
+		elScrollView.destroy = function () {
+			elScrollView.scroller.destroy();
+			elScrollView.pointer.destroy();
+			elScrollView.gesture.destroy();
+			elScrollView.scrollBar.destroy();
 		};
 		// Add content
-		var $ul = $($scrollContent).find("ul");
-		var docFrag = document.createDocumentFragment();
-		this.data.forEach(function (value) {
-			docFrag.appendChild($("<li>").html(value).get(0));
+		var $ul = $(elScrollContent).find("ul");
+		this.data_vertical.forEach(function (value) {
+			$ul.append($("<li>").html(value));
 		});
-		$ul.append(docFrag);
-		$scrollContent.parentNode.refresh();
-
+		$ul = null;
+		elScrollContent.parentNode.refresh();
 		// Add fast scroll fucntionality
-		var scroller = $scrollView.scroller;
+		var scroller = elScrollView.scroller;
 
 		function extractRect(element) {
 			var rect = element.getBoundingClientRect();
@@ -152,9 +154,9 @@ define("app", function () {
 			}
 		}
 
-		var rect = extractRect($scrollView);
+		var rect = extractRect(elScrollView);
 		var feelPercent = 20; // Scroll bar in right area starts to respond to touch after this percent
-		$scrollView.appendChild($("<div>").css({
+		elScrollView.appendChild($("<div>").css({
 			backgroundColor: "rgba(0, 0, 0, .03)",
 			bottom: 0,
 			cursor: "ns-resize",
@@ -162,7 +164,7 @@ define("app", function () {
 			right: 0,
 			top: 0,
 			width: feelPercent + "%"
-		}).get(0)); // Shady layer showing the user scroll border, can be removed
+		}).get(0)); // Shady layer showing the user scroll border
 		var scrollPosition = "right";
 		/**
 		 * Is pointer in scrollbar area
@@ -175,9 +177,8 @@ define("app", function () {
 		 * When window is resized we should kkep an eye on our content
 		 */
 		scroller._options.onResizeAfter = function () {
-			rect = extractRect($scrollView); // Watch for element actual dimensions
+			rect = extractRect(elScrollView); // Watch for element actual dimensions
 		};
-
 		scroller._options.onDownBefore = function (event) {
 			if (!isInScrollBarArea(event.clientX, event.clientY)) { // The event took place outside of the scroll area
 				// You catch those event params, modify them and pass to handler method
@@ -187,46 +188,52 @@ define("app", function () {
 			return false; // prevent default action
 		};
 		scroller._options.onMoveBefore = function (event) {
+			if (!elScrollView.pointer.isDown) {
+				return;
+			}// pointer not `pushed` or leave elemnet and back `pushed` but still funciton need to be ended
 			if (!isInScrollBarArea(event.clientX, event.clientY)) {
 				return;
 			}
 			// Get pointer event for new scroll position
 			var percent = ((event.clientY - rect.top) / (rect.bottom - rect.top) ) * 100;
-			var topIndent = ($scrollContent.offsetHeight * percent) * .01;
+			var topIndent = (elScrollContent.offsetHeight * percent) * .01;
 			scroller.jumpTo(topIndent); // Jump to position
-			if ($scrollView.scrollBar) { // Only if there is a scrollbar
-				$scrollView.scrollBar.setPosition(topIndent * -1);
+			if (elScrollView.scrollBar) { // Only if there is a scrollbar
+				elScrollView.scrollBar.setPosition(topIndent * -1);
 			}
 			// Update bookmark
 			bookmarkShow();
-			bookmarkUpdate($scrollContent.offsetHeight, $scrollView.scrollHeight);
+			bookmarkUpdate(elScrollContent.offsetHeight, elScrollView.scrollHeight);
 			return false;
 		};
 		scroller._options.onUpBefore = function () {
 			bookmarkHide();
 		};
 		scroller._options.onFlingBefore = function (event) {
-			return isInScrollBarArea(event.clientX, event.clientY) === false; // prevent default action if needed
+			return isInScrollBarArea(event.clientX, event.clientY) === false; // Prevent default action if needed
+		};
+		scroller._options.onFlingBefore = function (event) {
+			return isInScrollBarArea(event.clientX, event.clientY) === false; // Prevent default action if needed
+		};
+		scroller._options.onCancelAfter = scroller._options.onUpAfter = scroller._options.onLeaveAfter = function () {
+			bookmarkHide();
 		};
 	};
 	app._initScrollHorizontal = function () {
 		var $scroll = $("#scroll-horizontal");
-		var table = $scroll.find("tbody");
-		var docFrag = document.createDocumentFragment();
-		var tr = $("<tr>");
-		this.zodiacs.forEach(function (zodiac) {
-			tr.append($("<td>").addClass("symbol").addClass(zodiac).html("&nbsp;"));
+		var $tbody = $scroll.find("tbody");
+		var $tr = $("<tr>");
+		this.data_horizontal.forEach(function (zodiac) {
+			$tr.append($("<td>").addClass("symbol").addClass(zodiac).html("&nbsp;"));
 		});
-		docFrag.appendChild(tr.get(0));
-		table.append(docFrag);
-		docFrag = document.createDocumentFragment();
-		tr = $("<tr>");
-		this.zodiacs.forEach(function (zodiac) {
-			tr.append($("<td>").html(zodiac));
+		$tbody.append($tr);
+		$tr = $("<tr>");
+		this.data_horizontal.forEach(function (zodiac) {
+			$tr.append($("<td>").html(zodiac));
 		});
-		docFrag.appendChild(tr.get(0));
-		table.append(docFrag);
-		$scroll.parent().attr("is", "x-radjs-scrollview").get(0).refresh(); // indicate that element is webcomponent
+		delete this.data_horizontal;
+		$tbody.append($tr);
+		$scroll.parent().attr("is", "x-radjs-scrollview").get(0).refresh(); // Indicates that element is webcomponent
 	};
 	return app;
 });

@@ -79,9 +79,6 @@ code {
   -ms-user-select: none;
   user-select: none;
 }
-.scroll-horizontal .scroll-content {
-  min-width: 120%;
-}
 #scroll-horizontal table {
   margin-top: 32px;
 }
@@ -174,19 +171,19 @@ code {
 @media (min-width: 320px) {
   .scroll-horizontal,
   .scroll-vertical {
-    min-height: 200px;
+    min-height: 160px;
   }
 }
 @media (min-width: 481px) {
   .scroll-horizontal,
   .scroll-vertical {
-    min-height: 200px;
+    min-height: 160px;
   }
 }
 @media (min-width: 641px) {
   .scroll-horizontal,
   .scroll-vertical {
-    min-height: 200px;
+    min-height: 160px;
   }
 }
 @media (min-width: 961px) {
@@ -195,7 +192,7 @@ code {
   }
   .scroll-horizontal,
   .scroll-vertical {
-    min-height: 200px;
+    min-height: 192px;
   }
 }
 @media (min-width: 1025px) {
@@ -254,4 +251,11 @@ code {
   min-width: 32px;
   width: 5%;
   z-index: 9999;
+}
+h1, h2, h3, h4, h5, h6 {
+  width: 90%;
+}
+a, a:visited {
+  color: white;
+  border-bottom: 1px solid white;
 }

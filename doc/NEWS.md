@@ -1,6 +1,11 @@
 Scroll View Release Notes
 ==========================
 
+Version 1.0.3 - Jun 17, 2015
+---------------------
+
+- Fix WebComponent initialization when module loaded as global variable.
+
 Version 1.0.2 - Jun 16, 2015
 ---------------------
 

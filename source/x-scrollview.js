@@ -11,7 +11,7 @@
 			require("radjs-scrollview"), require("radjs-pointer"), require("radjs-gesture"), require("webcomponentsjs")
 		);
 	} else {
-		factory(root.PointerTracker || root.RADJS_Pointer, root.GestureTracker || root.RADJS_Gesture);
+		factory(root.RADJS_ScrollView, root.PointerTracker || root.RADJS_Pointer, root.GestureTracker || root.RADJS_Gesture);
 	}
 }(this, function (RADJS_ScrollView, RADJS_Pointer, RADJS_Gesture) {
 	"use strict";

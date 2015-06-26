@@ -275,6 +275,19 @@ var ScrollView = (function () {
 			this._wrapper = null;
 			this._options = null;
 		},
+		refreshSize: function () {
+			var rootWidth = this._root.offsetWidth, rootHeight = this._root.offsetHeight;
+			if (this._options.direction === "vertical") {
+				this._min = (rootHeight <= this._wrapper.clientHeight) ?
+				rootHeight - this._wrapper.clientHeight - this._options.marginMAX : 0;
+				this._margine = (this._options.bounds) ? Math.round(rootHeight / 3) : 0;
+			} else {
+				this._min = (rootWidth <= this._wrapper.offsetWidth) ?
+				rootWidth - this._wrapper.clientWidth - this._options.marginMAX : 0;
+				this._margine = (this._options.bounds) ? Math.round(rootWidth / 3) : 0;
+			}
+			this._max = this._options.marginMIN;
+		},
 		refresh: function () {
 			var rootWidth = this._root.offsetWidth, rootHeight = this._root.offsetHeight;
 			window.cancelAnimationFrame(this._RafID);
@@ -354,7 +367,7 @@ var ScrollView = (function () {
 					}
 					this._pos = position + this._shift;
 					this._shift = 0;
-					this._lastPointerPosition = event[this._coordName];
+					this._lastPointerPosition = this._pos;
 					this._motionType = this._STRINGS.checkTweak;
 					break;
 				case 1: //percent

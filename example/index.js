@@ -3,7 +3,6 @@ require.config({
 	"paths": {
 		"app": "app"
 		, "core-js": "bower_components/core.js/client/core.min"
-		, "jquery": "bower_components/jquery/dist/jquery.min"
 		, "radjs-pointer": "bower_components/radjs-pointer/release/pointer.min"
 		, "radjs-gesture": "bower_components/radjs-gesture/release/gesture.min"
 		, "radjs-scrollview": "bower_components/radjs-scrollview/release/radjs-scrollview.min"
@@ -13,7 +12,7 @@ require.config({
 		//, "x-radjs-scrollview": "../release/x-radjs-scrollview.min"
 	},
 	"shim": {
-		"app": {"deps": ["core-js", "jquery", "x-radjs-scrollview"]}
+		"app": {"deps": ["core-js", "x-radjs-scrollview"]}
 	},
 	"waitSeconds": 0
 });

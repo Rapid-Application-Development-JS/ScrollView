@@ -5,11 +5,12 @@ define("app", function () {
 		app.modules = modules; // Loaded JS modules
 		(app.data_vertical = data) && (data = null); // Dummy data for vertical scroll
 		app.data_horizontal = []; // Dummy data for horizontal scroll
-		$(function () {
-			app._init();
-			app._createScrollVertical();
-			app._initScrollHorizontal();
-		}); // Wait for DOM ready
+            if ( document ) {
+                app._init();
+                app._createScrollVertical();
+                app._initScrollHorizontal();
+            }
+        // Wait for DOM ready
 	};
 	app._init = function () {
 		// Create example data for horizontal scroll
@@ -19,14 +20,28 @@ define("app", function () {
 			}, this);
 	};
 	app._createScrollVertical = function () {
-		var elScrollContent = $("#scroll-vertical").get(0); // Content to be scrolled
+		var elScrollContent = document.getElementById('scroll-vertical'); // Content to be scrolled
 		var elScrollView = elScrollContent.parentNode; // Container for the content
 		var options = {};
+        var $bookmark=[];
+        var $summ;
 		options.direction = "vertical";
 		options.bounds = true;
 		options.scrollbar = "scrollbar-vertical"; // CSS class
-		var $bookmark = $("<div>").attr("id", "bookmark").addClass("bookmark"); // Create bookmark element
-		elScrollView.appendChild($bookmark.get(0));
+		var _bookmark = document.getElementsByTagName('div'); // Create bookmark element
+        for (var i=0; i<_bookmark.length; i++){
+           if(_bookmark[i].attributes.getNamedItem('id') !== null){
+                 if (_bookmark[i].attributes.getNamedItem('id') === 'bookmark'){
+                    _bookmark[i].classList.add('bookmark');
+                    $bookmark.push(_bookmark[i])
+                 }
+           }
+        }
+        $summ = $bookmark.length;
+        for (var i=0; i<$summ; i++){
+            elScrollView.appendChild($bookmark[i]);
+        }
+
 		/**
 		 * Function that toggles letter in bookmark
 		 */
@@ -38,19 +53,27 @@ define("app", function () {
 			} else if (index + 1 > app.data_vertical.length) {
 				index = app.data_vertical.length - 1;
 			}
-			$bookmark.html(app.data_vertical[index][0]); // Extract first letter
+            for (var i=0; i<$summ; i++) {
+                $bookmark[i].html(app.data_vertical[index][0]); // Extract first letter
+            }
 		}
 
 		function bookmarkHide() {
-			$bookmark.fadeOut(); // Fast scroll bookmark fadeout when scrolling stopped
+            for (var i=0; i<$summ; i++) {
+                $bookmark[i].fadeOut(); // Fast scroll bookmark fadeout when scrolling stopped
+            }
 			setTimeout(function () {
-				$bookmark.hide();
+                for (var i=0; i<$summ; i++) {
+                    $bookmark[i].hide();
+                }
 			}, 2000);
 		}
 
 		function bookmarkShow() {
-			$bookmark.css("opacity", 1).show(); // Fast Scroll effect with capital letter, make fully visible
-		}
+            for (var i=0; i<$summ; i++) {
+                $bookmark[i].css("opacity", 1).show(); // Fast Scroll effect with capital letter, make fully visible
+            }
+        }
 
 		/**
 		 * Decorate `onScrollBefore`
@@ -132,9 +155,11 @@ define("app", function () {
 			elScrollView.scrollBar.destroy();
 		};
 		// Add content
-		var $ul = $(elScrollContent).find("ul");
+		var $ul = elScrollContent.getElementsByTagName('ul');
 		this.data_vertical.forEach(function (value) {
-			$ul.append($("<li>").html(value));
+            var $li = document.createElement('li');
+            $li.appendChild(document.createTextNode(value));
+            $ul[0].appendChild($li);
 		});
 		$ul = null;
 		elScrollContent.parentNode.refresh();
@@ -156,15 +181,15 @@ define("app", function () {
 
 		var rect = extractRect(elScrollView);
 		var feelPercent = 20; // Scroll bar in right area starts to respond to touch after this percent
-		elScrollView.appendChild($("<div>").css({
-			backgroundColor: "rgba(0, 0, 0, .03)",
-			bottom: 0,
-			cursor: "ns-resize",
-			position: "absolute",
-			right: 0,
-			top: 0,
-			width: feelPercent + "%"
-		}).get(0)); // Shady layer showing the user scroll border
+		var div = document.createElement('div');
+        div.setAttribute('style','backgroundColor : rgba(0, 0, 0, .03); '+
+        'bottom: 0; '+
+        'cursor: "ns-resize; '+
+        'position: "absolute; '+
+        'right: 0; '+
+        'top: 0; '+
+        'width:'+ feelPercent + '%; ');
+        elScrollView.appendChild(div); // Shady layer showing the user scroll border
 		var scrollPosition = "right";
 		/**
 		 * Is pointer in scrollbar area
@@ -220,20 +245,34 @@ define("app", function () {
 		};
 	};
 	app._initScrollHorizontal = function () {
-		var $scroll = $("#scroll-horizontal");
-		var $tbody = $scroll.find("tbody");
-		var $tr = $("<tr>");
+		var _scroll = document.getElementsByTagName('div');
+        var $scroll = [];
+        for (var i =0; i<_scroll.length; i++) {
+            if(_scroll[i].attributes.getNamedItem('id') !== null){
+                if(_scroll[i].attributes.getNamedItem('id').textContent == "scroll-horizontal"){
+                    $scroll.push(_scroll[i]);
+                }
+            }
+        }
+
+		var $tbody = $scroll[0].getElementsByTagName('tbody');
+		var $tr = document.createElement('tr');
 		this.data_horizontal.forEach(function (zodiac) {
-			$tr.append($("<td>").addClass("symbol").addClass(zodiac).html("&nbsp;"));
+            var $td = document.createElement('td');
+            $td.setAttribute('class','symbol '+ zodiac);
+//            $td.textContent='&nbsp;';
+			$tr.appendChild($td);
 		});
-		$tbody.append($tr);
-		$tr = $("<tr>");
+		$tbody[0].appendChild($tr);
+		$tr = document.createElement('tr');
 		this.data_horizontal.forEach(function (zodiac) {
-			$tr.append($("<td>").html(zodiac));
+            var $td = document.createElement('td');
+            $td.textContent = zodiac;
+			$tr.appendChild($td);
 		});
 		delete this.data_horizontal;
-		$tbody.append($tr);
-		$scroll.parent().attr("is", "x-radjs-scrollview").get(0).refresh(); // Indicates that element is webcomponent
+		$tbody[0].appendChild($tr);
+        $scroll[0].parentNode.refresh(); // Indicates that element is webcomponent
 	};
 	return app;
 });

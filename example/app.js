@@ -5,12 +5,11 @@ define("app", function () {
 		app.modules = modules; // Loaded JS modules
 		(app.data_vertical = data) && (data = null); // Dummy data for vertical scroll
 		app.data_horizontal = []; // Dummy data for horizontal scroll
-            if ( document ) {
-                app._init();
-                app._createScrollVertical();
-                app._initScrollHorizontal();
-            }
-        // Wait for DOM ready
+        app._init();
+        app._createScrollVertical();
+        app._initScrollHorizontal();
+
+
 	};
 	app._init = function () {
 		// Create example data for horizontal scroll
@@ -23,14 +22,12 @@ define("app", function () {
 		var elScrollContent = document.getElementById('scroll-vertical'); // Content to be scrolled
 		var elScrollView = elScrollContent.parentNode; // Container for the content
 		var options = {};
-        var $summ;
 		options.direction = "vertical";
 		options.bounds = true;
 		options.scrollbar = "scrollbar-vertical"; // CSS class
 		var $bookmark = document.createElement('div'); // Create bookmark element
             $bookmark.setAttribute('id','bookmark');
             $bookmark.classList.add('bookmark');
-        $summ = document.getElementsByClassName('bookmark').length;
             elScrollView.appendChild($bookmark);
 
 
@@ -234,22 +231,12 @@ define("app", function () {
 		};
 	};
 	app._initScrollHorizontal = function () {
-		var _scroll = document.getElementsByTagName('div');
-        var $scroll = [];
-        for (var i =0; i<_scroll.length; i++) {
-            if(_scroll[i].attributes.getNamedItem('id') !== null){
-                if(_scroll[i].attributes.getNamedItem('id').textContent == "scroll-horizontal"){
-                    $scroll.push(_scroll[i]);
-                }
-            }
-        }
-
-		var $tbody = $scroll[0].getElementsByTagName('tbody');
+		var $scroll = document.getElementById('scroll-horizontal');
+      	var $tbody = $scroll.getElementsByTagName('tbody');
 		var $tr = document.createElement('tr');
 		this.data_horizontal.forEach(function (zodiac) {
             var $td = document.createElement('td');
             $td.setAttribute('class','symbol '+ zodiac);
-//            $td.textContent='&nbsp;';
 			$tr.appendChild($td);
 		});
 		$tbody[0].appendChild($tr);
@@ -261,7 +248,7 @@ define("app", function () {
 		});
 		delete this.data_horizontal;
 		$tbody[0].appendChild($tr);
-        $scroll[0].parentNode.refresh(); // Indicates that element is webcomponent
+        $scroll.parentNode.refresh(); // Indicates that element is webcomponent
 	};
 	return app;
 });

@@ -23,24 +23,16 @@ define("app", function () {
 		var elScrollContent = document.getElementById('scroll-vertical'); // Content to be scrolled
 		var elScrollView = elScrollContent.parentNode; // Container for the content
 		var options = {};
-        var $bookmark=[];
         var $summ;
 		options.direction = "vertical";
 		options.bounds = true;
 		options.scrollbar = "scrollbar-vertical"; // CSS class
-		var _bookmark = document.getElementsByTagName('div'); // Create bookmark element
-        for (var i=0; i<_bookmark.length; i++){
-           if(_bookmark[i].attributes.getNamedItem('id') !== null){
-                 if (_bookmark[i].attributes.getNamedItem('id') === 'bookmark'){
-                    _bookmark[i].classList.add('bookmark');
-                    $bookmark.push(_bookmark[i])
-                 }
-           }
-        }
-        $summ = $bookmark.length;
-        for (var i=0; i<$summ; i++){
-            elScrollView.appendChild($bookmark[i]);
-        }
+		var $bookmark = document.createElement('div'); // Create bookmark element
+            $bookmark.setAttribute('id','bookmark');
+            $bookmark.classList.add('bookmark');
+        $summ = document.getElementsByClassName('bookmark').length;
+            elScrollView.appendChild($bookmark);
+
 
 		/**
 		 * Function that toggles letter in bookmark
@@ -53,26 +45,23 @@ define("app", function () {
 			} else if (index + 1 > app.data_vertical.length) {
 				index = app.data_vertical.length - 1;
 			}
-            for (var i=0; i<$summ; i++) {
-                $bookmark[i].html(app.data_vertical[index][0]); // Extract first letter
-            }
+                $bookmark.innerText =app.data_vertical[index][0]; // Extract first letter
+
 		}
 
 		function bookmarkHide() {
-            for (var i=0; i<$summ; i++) {
-                $bookmark[i].fadeOut(); // Fast scroll bookmark fadeout when scrolling stopped
-            }
+                $bookmark.setAttribute('style','opacity: 0'); // Fast scroll bookmark fadeout when scrolling stopped
+
 			setTimeout(function () {
-                for (var i=0; i<$summ; i++) {
-                    $bookmark[i].hide();
-                }
+                $bookmark.setAttribute('style','display: none;');
 			}, 2000);
 		}
 
 		function bookmarkShow() {
-            for (var i=0; i<$summ; i++) {
-                $bookmark[i].css("opacity", 1).show(); // Fast Scroll effect with capital letter, make fully visible
-            }
+
+                $bookmark.setAttribute('style','opacity: 1');
+                $bookmark.setAttribute('style','display: block;'); // Fast Scroll effect with capital letter, make fully visible
+
         }
 
 		/**

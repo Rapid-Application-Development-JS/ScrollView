@@ -122,13 +122,13 @@ var ScrollView = (function () {
 	}
 
 	ScrollView.prototype = {
-		version: "1.0.3",
+		version: "1.0.4",
 		TRACKING_EVENTS: {
 			resize: "resize",
 			up: "pointerup",
 			move: "pointermove",
 			down: "pointerdown",
-			chancel: "pointercancel",
+			cancel: "pointercancel",
 			fling: "fling",
 			leave: "pointerleave"
 		},

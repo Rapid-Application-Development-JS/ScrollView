@@ -47,7 +47,7 @@
     this.version = "1.0.2";
     this._el = element;
     this.isDown = false;
-    this.chancelId = false;
+    this.cancelId = false;
     this.enableMultiTouch = true;
     this.setMoveHoverState = function (moveHoverState) {
       _moveHoverState = moveHoverState;
@@ -156,8 +156,8 @@
       }
     },
     handleEvent: function (event) {
-      if (this.chancelId !== null) {
-        clearTimeout(this.chancelId);
+      if (this.cancelId !== null) {
+        clearTimeout(this.cancelId);
       }
       switch (event.type) {
         case STRINGS.touchmove:
@@ -171,7 +171,7 @@
         case STRINGS.mousedown:
         case STRINGS.pointerDown:
           this.isDown = true;
-          this.chancelId = false;
+          this.cancelId = false;
           if (!this.isPointerHoverEventReceived) {
             this._fireEvent(this.EVENTS.over, event);
             this._fireEvent(this.EVENTS.enter, event);
@@ -211,10 +211,10 @@
           var pointerTracker = this;
           this._fireEvent(this.EVENTS.out, event);
           if (this.isDown) {
-            this.chancelId = setTimeout(function () {
+            this.cancelId = setTimeout(function () {
               pointerTracker.isDown = false;
               pointerTracker._fireEvent(pointerTracker.EVENTS.cancel, event, true, false);
-              pointerTracker.chancelId = null;
+              pointerTracker.cancelId = null;
             }, 10);
           }
           break;

@@ -1,6 +1,11 @@
 Scroll View Release Notes
 ==========================
 
+Version 1.0.4 - Oct 14, 2015
+---------------------
+
+- Fix wrong name of event in **ScrollView.TRACKING_EVENTS** from **chancel** to **cancel**.
+
 Version 1.0.3 - Jun 17, 2015
 ---------------------
 

@@ -11,7 +11,7 @@ Scroll wrapper with additional features.
 
 [RAD.JS Blog](http://rad-js.com/)
 
-[MobiDev Software Development Company](http://mobidev.biz/)
+[MobiDev](http://mobidev.biz/)
 
 ## Advantages:
 
